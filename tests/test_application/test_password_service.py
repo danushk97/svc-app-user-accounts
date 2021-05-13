@@ -81,7 +81,7 @@ def test_get_password_hash_given_valid_password_raises_password_service_exceptio
 def test_get_password_hash_given_valid_password_raises_password_service_exception_on_repo_error(password_service_raises_exception):
     with pytest.raises(PasswordServiceException) as excinfo:
         password_service_raises_exception.validate_credential('user_id', 'password')
-    assert excinfo.value.error_codes == [{'error_code': 5000, 'error_description': 'Internal server error'}]
+    assert excinfo.value.error_codes == [{'error_code': 0, 'error_description': 'repo error'}]
 
 
 def test_get_password_hash_given_valid_password_returns_none(password_service):

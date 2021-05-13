@@ -104,4 +104,4 @@ def test_create_user_on_repository_exception_user_service_exception(user_service
             'phone_number': 1234567890,
             'password': 'password'
         })
-    assert excinfo.value.error_codes == [{'error_code': 5000, 'error_description': 'Internal server error'}]
+    assert excinfo.value.error_codes == [{'error_code': 0, 'error_description': 'repo error'}]

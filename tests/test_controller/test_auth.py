@@ -1,5 +1,5 @@
 def test_login_given_valid_input_then_returns_data_with_status_code_200(client):
-    response = client.get('/login', json={
+    response = client.post('/login', json={
         'user_id': 'id',
         'password': 'password'
     })
@@ -10,7 +10,7 @@ def test_login_given_valid_input_then_returns_data_with_status_code_200(client):
 
 
 def test_login_on_exception_from_service_layer_returns_status_code_500(client_raises_exception):
-    response = client_raises_exception.get('/login', json={
+    response = client_raises_exception.post('/login', json={
         'user_id': 'user_id',
         'password': 'password'
     })

@@ -38,7 +38,7 @@ class FakeSQLAlchemySession:
         return self
 
     def all(self):
-        if self.limit == 1:
+        if hasattr(self, 'limit_val'):
             return [FakePassword]
         return ['data']
 
@@ -47,7 +47,7 @@ class FakeSQLAlchemySession:
 
 
     def limit(self, limit):
-        self.limit = 1
+        self.limit_val = limit
         return self
 
     def commit(self):

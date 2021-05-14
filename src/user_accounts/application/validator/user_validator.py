@@ -28,8 +28,7 @@ class UserValidator:
     def validate_is_unique_user(self, user: User,
                                 repository: UserRepository,
                                 attr_keys=[Constants.EMAIL,
-                                           Constants.DISPLAY_NAME,
-                                           Constants.PHONE_NUMBER]):
+                                           Constants.DISPLAY_NAME]):
         """
         Validates whether the user is unique.
 
@@ -48,10 +47,10 @@ class UserValidator:
 
         for key in attr_keys:
             user = repository.get_user_by_attr_field(key,
-                                                     user_attr.get(f'_User__{key}'))
+                user_attr.get(f'_User__{key}'))
             if user:
                 error_codes.extend([self.error_code_generator\
-                                       .generate_duplicate_user_error_code(key)])
+                           .generate_duplicate_user_error_code(key)])
 
         if error_codes:
             raise InvalidUserException(error_codes=error_codes)

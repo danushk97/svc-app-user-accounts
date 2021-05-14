@@ -92,7 +92,7 @@ class PasswordService(BaseService):
         if not password_hash:
             raise PasswordServiceException([
                 InvalidUserErrorCodes.NO_USER_FOUND
-            ], StatusCode.RESOURCE_NOT_FOUND)
+            ], StatusCode.BAD_REQUEST)
 
         return password_hash
 

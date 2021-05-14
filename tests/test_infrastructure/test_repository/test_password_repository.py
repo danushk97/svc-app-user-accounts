@@ -28,7 +28,7 @@ def test_add_rasies_postgres_repo_exception_on_sql_error(password_repo_raise_sql
         password_repo_raise_sql_error.update_password_by_user_id('key', 'value')
 
 
-def test_get_password_hash_given_valid_data_returns_affected_row(password_repo):
+def test_get_password_hash_given_valid_data_returns_password_hash(password_repo):
     assert password_repo.get_password_hash_by_email('key') == 'password_hash'
 
 

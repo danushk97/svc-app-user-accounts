@@ -28,9 +28,6 @@ class InvalidUserErrorCodeGenerator:
         if duplicate_field == Constants.DISPLAY_NAME:
             return InvalidUserErrorCodes.USER_WITH_DISPLAY_NAME_ALREADY_EXISTS
 
-        if duplicate_field.lower() == Constants.PHONE_NUMBER:
-            return InvalidUserErrorCodes.USER_WITH_PHONE_NUMBER_ALREADY_EXISTS
-
 
     def generate_invalid_user_error_codes(self, user: User) -> list:
         """
@@ -47,11 +44,9 @@ class InvalidUserErrorCodeGenerator:
         required_keys = [
             (Constants.EMAIL, InvalidUserErrorCodes.INVALID_EMAIL),
             (Constants.PASSWORD, InvalidUserErrorCodes.INVALID_PASSWORD),
-            (Constants.PHONE_NUMBER, InvalidUserErrorCodes.INVALID_PHONE_NUMBER),
             (Constants.DISPLAY_NAME, InvalidUserErrorCodes.INVALID_DISPLAY_NAME)
         ]
         self.__update_error_codes_for_empty_value(required_keys, user_props, error_codes)
-        self.__update_error_code_for_invalid_phone_number(user.phone_number, error_codes)
 
         if hasattr(user, Constants.PASSWORD) and not user.password.is_valid():
             error_codes.append(InvalidUserErrorCodes.INVALID_PASSWORD_LENGTH)
@@ -70,17 +65,3 @@ class InvalidUserErrorCodeGenerator:
             value = props.get(f'_User__{key}')
             if not value:
                 error_codes.append(error_code)
-
-
-    def __update_error_code_for_invalid_phone_number(self, phone_number: int,
-                                                     error_codes: list) -> None:
-        """
-        Updates self.error_codes with appropriate error code if phone number is
-        invalid.
-
-        Args:
-            payload (dict): User info
-        """
-        if not isinstance(phone_number, int) or len(str(phone_number)) != 10:
-            error_code = InvalidUserErrorCodes.PHONE_NUMBER_MUST_BE_A_10_DIGIT_INTEGER
-            error_codes.append(error_code)

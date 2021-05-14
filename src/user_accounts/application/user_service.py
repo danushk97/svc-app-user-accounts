@@ -3,35 +3,23 @@ This moudule acts as the service layer which helps to create, delete and update
 user account detail.
 """
 
-import os
 from injector import inject
 from apputils.error_handler import ErrorHandler
 
 from user_accounts.infrastructure.unit_of_work.postgres import \
     PostgresUnitOfWork
-from user_accounts.infrastructure.repository.postgres_repository import \
-    PostgresRepository
 from user_accounts.common import exception
-from user_accounts.application.error_code_generator.invalid_user_error_code_generator \
-    import InvalidUserErrorCodeGenerator
-from user_accounts.common.exception import InvalidUserException
 from user_accounts.common.constants import Constants
 from user_accounts.domain.user import User
-from user_accounts.domain.postgres_models.user import User as UserModel
-from user_accounts.domain.postgres_models.password import Password as \
-        PasswordModel
 from user_accounts.domain.password import Password
-from user_accounts.infrastructure.repository.postgres_repository import \
-    PostgresRepository
-from user_accounts.infrastructure.repository.user_repository import \
-    UserRepository
 from user_accounts.application.validator.user_validator import UserValidator
 from user_accounts.application.base_service import BaseService
 
 
 class UserService(BaseService):
     """
-    Holds business usecase/logic which are related to user creation/updation/deletion.
+    Holds business usecase/logic which are related to user
+    creation/updation/deletion.
 
     Attributes:
         postgres_unit_of_work (PostgresUnitOfWork): Helps communicating with
@@ -73,7 +61,9 @@ class UserService(BaseService):
         user_model = user.get_postgres_user_model()
         repository.add(user_model)
         unit_of_work.flush()
-        password = user.password.get_postgres_password_model(user_model.stable_id)
+        password = user.password.get_postgres_password_model(
+            user_model.stable_id
+        )
         repository.add(password)
         unit_of_work.commit()
 

@@ -66,8 +66,9 @@ class PasswordRepository(PostgresRepository):
                        .query(Password)\
                        .join(User, and_(Password.user_id == User.stable_id))\
                        .filter(User.attr[Constants.EMAIL].astext == email)\
-                       .one()
+                       .limit(1)\
+                       .all()
 
         if password:
-            password_hash = password.attr[Constants.CREDENTIAL]
+            password_hash = password[0].attr[Constants.CREDENTIAL]
             return password_hash

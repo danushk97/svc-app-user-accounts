@@ -19,7 +19,6 @@ class InvalidUserErrorCodeGenerator:
         error_codes (list): Holds the list of error codes.
     """
     def generate_duplicate_user_error_code(self, duplicate_field: str):
-
         duplicate_field = str(duplicate_field).lower()
 
         if duplicate_field == Constants.EMAIL:

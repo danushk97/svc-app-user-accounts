@@ -1,8 +1,13 @@
-def test_login_given_valid_input_then_returns_data_with_status_code_200(client):
+import jwt
+
+def test_login_given_valid_input_then_returns_data_with_status_code_200(client, monkeypatch):
     response = client.post('/login', json={
         'user_id': 'id',
         'password': 'password'
     })
+
+    decoded_jwt = jwt.decode(response.headers['set-cookie'], 'secret', algorithms=['HS256'])
+    assert decoded_jwt == {'user_id': 'user_id'}
     assert response.status_code == 200
     assert response.get_json() == {
         'message': 'Login successful'

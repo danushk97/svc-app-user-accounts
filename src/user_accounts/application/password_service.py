@@ -2,7 +2,9 @@
 This moudule acts as the service layer which helps to update user password.
 """
 
+import jwt
 from injector import inject
+from user_accounts.domain.postgres_models import user
 from apputils.error_handler import ErrorHandler
 from apputils.status_code import StatusCode
 
@@ -60,19 +62,27 @@ class PasswordService(BaseService):
                                     PasswordServiceException)
     def validate_credential(self, email: str, password: str) -> None:
         """
-        Validates credential.
+        Validates credential and returns a JWT if the credential is valid.
 
         Args:
             email (str): User email id.
             password (str): Password.
+
+        Returns:
+            jwt_token ()
         """
         self.__check_email(email)
-        credential = self.initiate_db_transaction(self.__get_password_hash,
+        user_id, credential = self.initiate_db_transaction(self.__get_password_hash,
                                                   email)
         Password.validate_password(password.encode(), credential.encode())
 
+        # TODO: Need to move secret to env_var and to update the payload
+        jwt_token = jwt.encode({Constants.USER_ID: user_id}, 'secret')
+
+        return jwt_token
+
     def __get_password_hash(self, unit_of_work: PostgresUnitOfWork,
-                            email: str) -> str:
+                            email: str) -> tuple:
         """
         Helps to get password hash of the under the requested user_id.
 
@@ -81,20 +91,21 @@ class PasswordService(BaseService):
             email (str): User email id.
 
         Returns:
-            password_hash (str): Hashed password string.
+            user_password (tuple): Contains the user_id at place 0 and
+            password_hash at place 1
 
         Raises:
             PasswordServiceException: On no data found.
         """
         repository = unit_of_work.password_repository()
-        password_hash = repository.get_password_hash_by_email(email)
+        user_password = repository.get_password_hash_by_email(email)
 
-        if not password_hash:
+        if not user_password:
             raise PasswordServiceException([
                 InvalidUserErrorCodes.NO_USER_FOUND
             ], StatusCode.BAD_REQUEST)
 
-        return password_hash
+        return user_password[0], user_password[1]
 
 
     def __update_password(self, unit_of_work: PostgresUnitOfWork,

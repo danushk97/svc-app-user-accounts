@@ -48,7 +48,7 @@ class FakePasswordRepository(FakePostgresRepository):
         hashing_itertation = randint(int(minimum_hash_iteration),
                                      int(maximum_hash_iteration))
         salt = bcrypt.gensalt(rounds=hashing_itertation)
-        return bcrypt.hashpw('password'.encode('utf-8'), salt).decode('utf-8')
+        return user_id, bcrypt.hashpw('password'.encode('utf-8'), salt).decode('utf-8')
 
 
 class FakePasswordRepositoryReturnsZero(FakePostgresRepository):

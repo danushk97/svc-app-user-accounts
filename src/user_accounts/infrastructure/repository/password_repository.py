@@ -49,7 +49,7 @@ class PasswordRepository(PostgresRepository):
         return row_affected
 
     @ErrorHandler.handle_exception([SQLAlchemyError], PostgresRepositoryException)
-    def get_password_hash_by_email(self, email: str) -> str:
+    def get_password_hash_by_email(self, email: str) -> tuple:
         """
         Fetches password hash for the user_id.
 
@@ -57,7 +57,7 @@ class PasswordRepository(PostgresRepository):
             email (str): User email id.
 
         Returns:
-            password_hash (str): Password Hash.
+            user_id (str): User id, password_hash (str): Password Hash.
 
         Raises:
             PostgresRepositoryException: On SQLAlachemyError
@@ -70,4 +70,5 @@ class PasswordRepository(PostgresRepository):
 
         if password:
             password_hash = password.attr[Constants.CREDENTIAL]
-            return password_hash
+
+            return password.user_id, password_hash

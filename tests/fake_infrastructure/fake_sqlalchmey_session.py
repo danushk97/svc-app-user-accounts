@@ -1,16 +1,18 @@
 from sqlalchemy.exc import SQLAlchemyError
 
+
 class FakePassword:
+    user_id = 'user_id'
     attr = {
         'credential': 'password_hash'
     }
+
 
 class FakeSQLAlchemySession:
     def __init__(self, *args, **kwargs):
         """
         Pass
         """
-        pass
 
     def __call__(self):
         return self

@@ -29,7 +29,7 @@ def test_add_rasies_postgres_repo_exception_on_sql_error(password_repo_raise_sql
 
 
 def test_get_password_hash_given_valid_data_returns_password_hash(password_repo):
-    assert password_repo.get_password_hash_by_email('key') == 'password_hash'
+    assert password_repo.get_password_hash_by_email('key') == ('user_id', 'password_hash')
 
 
 def test_get_password_hash_rasies_postgres_repo_exception_on_sql_error(password_repo_raise_sql_error):

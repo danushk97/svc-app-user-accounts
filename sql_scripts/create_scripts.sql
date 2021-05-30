@@ -14,4 +14,4 @@ user_password (
     user_id      UUID 							  NOT NULL,
 	attr      	 JSONB							  NOT NULL,
 	created_date TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc') NOT NULL
-)
+);

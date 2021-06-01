@@ -1,7 +1,6 @@
 import pytest
 
-from tests.fake_service.fake_user_service import FakeUserService, \
-    FakeUserServiceRaisesException
+from tests.fake_service.fake_user_service import FakeUserService
 from tests.fake_service.fake_password_service import FakePasswordService, \
     FakePasswordServiceRaisesException
 
@@ -35,4 +34,3 @@ def client_raises_exception():
 def test_init(monkeypatch):
     monkeypatch.setenv('minimum_hash_iteration', '4')
     monkeypatch.setenv('maximum_hash_iteration', '12')
-

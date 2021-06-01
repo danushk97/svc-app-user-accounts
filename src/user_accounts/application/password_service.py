@@ -4,7 +4,6 @@ This moudule acts as the service layer which helps to update user password.
 
 import jwt
 from injector import inject
-from user_accounts.domain.postgres_models import user
 from apputils.error_handler import ErrorHandler
 from apputils.status_code import StatusCode
 

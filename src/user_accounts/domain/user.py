@@ -1,6 +1,8 @@
 """
 This module holds the class which defines user entity.
 """
+import re
+
 from user_accounts.common.constants import Constants
 from user_accounts.domain.password import Password
 from user_accounts.domain.postgres_models.user import User as UserModel
@@ -54,6 +56,7 @@ class User:
         """
         user_props = self.__dict__
         password_key = '_User__password'
+        email_key = '_User__email'
 
         if not password_key in user_props:
             return False
@@ -65,7 +68,14 @@ class User:
             if key == password_key and not self.password.is_valid():
                 return False
 
+            if key == email_key and not self.isvalid_email():
+                return False
+
         return True
+
+    def isvalid_email(self):
+        return re.search('^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$',
+                         self.email)
 
     def get_postgres_user_model(self):
         if self.is_valid():

@@ -2,12 +2,9 @@
 This module holds the class which is responsible to validate request data.
 """
 
-import logging
-
 from user_accounts.common.constants import Constants
-from apputils.status_code import StatusCode
-from user_accounts.common.error_codes.invalid_user_error_codes import InvalidUserErrorCodes
-from user_accounts.common.exception import InvalidPayloadException
+from user_accounts.common.error_codes.invalid_user_error_codes import \
+    InvalidUserErrorCodes
 from user_accounts.domain.user import User
 
 
@@ -50,6 +47,9 @@ class InvalidUserErrorCodeGenerator:
         if hasattr(user, Constants.PASSWORD) and not user.password.is_valid():
             error_codes.append(InvalidUserErrorCodes.INVALID_PASSWORD_LENGTH)
 
+        if user.email and not user.isvalid_email():
+            error_codes.append(InvalidUserErrorCodes.INVALID_EMAIL)
+
         return error_codes
 
     def __update_error_codes_for_empty_value(self, keys: list, props: dict,
@@ -62,5 +62,6 @@ class InvalidUserErrorCodeGenerator:
         """
         for key, error_code in keys:
             value = props.get(f'_User__{key}')
+
             if not value:
                 error_codes.append(error_code)

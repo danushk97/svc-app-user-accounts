@@ -38,7 +38,7 @@ class Password:
 
     @property
     def password_str(self) -> str:
-        return self.__password
+        return self.__password_str
 
     @property
     def salt(self) -> str:
@@ -50,7 +50,10 @@ class Password:
 
     @password_str.setter
     def password_str(self, password: str) -> None:
-        self.__password = password
+        if not isinstance(password, str):
+            raise ValueError('password value must be string')
+
+        self.__password_str = password
 
     @password_hash.setter
     def password_hash(self, password_hash: bytes) -> None:
@@ -78,6 +81,6 @@ class Password:
         return PasswordModel(**password_attr)
 
     @staticmethod
-    def validate_password(password: bytes, hashed_password: bytes):
+    def validate_password(password: bytes, hashed_password: bytes) -> None:
         if not bcrypt.checkpw(password, hashed_password):
             raise InvalidCredetialException()

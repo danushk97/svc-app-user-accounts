@@ -18,6 +18,6 @@ class Constants(ReadOnly):
     ATTRIBUTES = 'attributes'
     ATTR = 'attr'
     USER_ID = 'user_id'
-    MINIMUM_HASH_ITERATION = 'minimum_hash_iteration'
-    MAXIMUM_HASH_ITERATION = 'maximum_hash_iteration'
+    MINIMUM_HASH_ITERATION = 'MINIMUM_HASH_ITERATION'
+    MAXIMUM_HASH_ITERATION = 'MAXIMUM_HASH_ITERATION'
     CREDENTIAL = 'credential'

@@ -1,10 +1,10 @@
 import pytest
 
-from tests.fake_service.fake_user_service import FakeUserService
+from tests.fake_service.fake_user_service import FakeUserService, FakeUserServiceRaisesException
 from tests.fake_service.fake_password_service import FakePasswordService, \
     FakePasswordServiceRaisesException
 
-from user_accounts import create_app
+from user_accounts.manage import create_app
 from user_accounts.application.user_service import UserService
 from user_accounts.application.password_service import PasswordService
 
@@ -16,6 +16,7 @@ def test_di_config(binder):
 
 def test_di_exception_config(binder):
     binder.bind(PasswordService, FakePasswordServiceRaisesException)
+    binder.bind(UserService, FakeUserServiceRaisesException)
 
 
 @pytest.fixture

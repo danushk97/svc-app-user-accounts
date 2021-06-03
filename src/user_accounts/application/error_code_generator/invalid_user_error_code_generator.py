@@ -35,14 +35,13 @@ class InvalidUserErrorCodeGenerator:
         Raises:
             InvalidPayloadException: If length of self.error_codes > 0
         """
-        user_props = user.__dict__
         error_codes = []
-        required_keys = [
-            (Constants.EMAIL, InvalidUserErrorCodes.INVALID_EMAIL),
-            (Constants.PASSWORD, InvalidUserErrorCodes.INVALID_PASSWORD),
-            (Constants.DISPLAY_NAME, InvalidUserErrorCodes.INVALID_DISPLAY_NAME)
+        required_values = [
+            (user.email, InvalidUserErrorCodes.INVALID_EMAIL),
+            (user.password, InvalidUserErrorCodes.INVALID_PASSWORD),
+            (user.display_name, InvalidUserErrorCodes.INVALID_DISPLAY_NAME)
         ]
-        self.__update_error_codes_for_empty_value(required_keys, user_props, error_codes)
+        self.__update_error_codes_for_empty_value(required_values, error_codes)
 
         if hasattr(user, Constants.PASSWORD) and not user.password.is_valid():
             error_codes.append(InvalidUserErrorCodes.INVALID_PASSWORD_LENGTH)
@@ -52,7 +51,7 @@ class InvalidUserErrorCodeGenerator:
 
         return error_codes
 
-    def __update_error_codes_for_empty_value(self, keys: list, props: dict,
+    def __update_error_codes_for_empty_value(self, values: list,
                                              error_codes: list) -> None:
         """
         Checks whether the list of keys are present in the payload.
@@ -60,8 +59,6 @@ class InvalidUserErrorCodeGenerator:
         Args:
             payload (dict): User info.
         """
-        for key, error_code in keys:
-            value = props.get(f'_User__{key}')
-
+        for value, error_code in values:
             if not value:
                 error_codes.append(error_code)

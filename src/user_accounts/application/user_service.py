@@ -9,9 +9,7 @@ from apputils.error_handler import ErrorHandler
 from user_accounts.infrastructure.unit_of_work.postgres import \
     PostgresUnitOfWork
 from user_accounts.common import exception
-from user_accounts.common.constants import Constants
 from user_accounts.domain.user import User
-from user_accounts.domain.password import Password
 from user_accounts.application.validator.user_validator import UserValidator
 from user_accounts.application.base_service import BaseService
 
@@ -79,10 +77,4 @@ class UserService(BaseService):
         Returns:
             User
         """
-        password = props.get(Constants.PASSWORD)
-
-        if password:
-            password = Password(password)
-            props.pop(Constants.PASSWORD)
-
-        return User(password=password, **props)
+        return User(**props)

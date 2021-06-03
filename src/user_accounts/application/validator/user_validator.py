@@ -12,6 +12,7 @@ from user_accounts.infrastructure.repository.user_repository import \
 from user_accounts.common.constants import Constants
 from user_accounts.common.exception import InvalidUserException
 
+
 class UserValidator:
     """
     Validates the user data.
@@ -42,13 +43,11 @@ class UserValidator:
         Raises:
             InvalidUserException: On duplicate entry.
         """
-        user_attr = user.__dict__
         error_codes = []
 
         for key in attr_keys:
-            user = repository.get_user_by_attr_field(key,
-                user_attr.get(f'_User__{key}'))
-            if user:
+            result = repository.get_user_by_attr_field(key, getattr(user, key))
+            if result:
                 error_codes.extend([self.error_code_generator\
                            .generate_duplicate_user_error_code(key)])
 

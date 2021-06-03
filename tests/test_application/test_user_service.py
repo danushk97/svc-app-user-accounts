@@ -52,8 +52,7 @@ def test_create_user_given_invalid_password_raises_invalid_user_exception(user_s
         user_service.create_user({'email': 'email@gmail.com',
                                   'display_name': 'name',
                                   'phone_number': 1234567890})
-
-    assert excinfo.value.error_codes == [INVALID_PASSWORD]
+    assert excinfo.value.error_codes == [INVALID_PASSWORD_LENGTH]
 
 
 def test_create_user_given_invalid_phone_and_password_length_raises_invalid_user_exception(user_service):

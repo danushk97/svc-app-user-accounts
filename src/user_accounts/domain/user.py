@@ -3,6 +3,8 @@ This module holds the class which defines user entity.
 """
 import re
 
+from user_accounts.application.password_service import PasswordService
+
 from user_accounts.common.constants import Constants
 from user_accounts.domain.password import Password
 from user_accounts.domain.postgres_models.user import User as UserModel
@@ -17,67 +19,46 @@ class User:
         display_name (str): User's profile name.
         password (Password): User's password.
     """
-    def __init__(self, password:Password=None, **kwargs):
+    def __init__(self, **kwargs):
         """
         Instantiates the class.
         """
         self.email = kwargs.get(Constants.EMAIL)
         self.display_name = kwargs.get(Constants.DISPLAY_NAME)
-        self.password = password
+        self.password = Password(kwargs.get(Constants.PASSWORD, ''))
 
     @property
-    def email(self):
-        return self.__email
-
-    @property
-    def display_name(self):
-        return self.__display_name
-
-    @property
-    def password(self):
+    def password(self) -> Password:
         return self.__password
 
-    @email.setter
-    def email(self, email: str):
-        self.__email = email
-
-    @display_name.setter
-    def display_name(self, display_name: str):
-        self.__display_name = display_name
-
     @password.setter
-    def password(self, password: Password):
-        if isinstance(password, Password):
-            self.__password = password
+    def password(self, password: Password) -> None:
+        if not isinstance(password, Password):
+            raise ValueError('password must be instance of password')
+
+        self.__password = password
+
+    def isvalid_display_name(self) -> bool:
+        return bool(self.display_name)
+
+    def isvalid_email(self) -> bool:
+        return re.search('^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$',
+                         self.email) is not None
+
+    def isvalid_password(self) -> bool:
+        return self.password.is_valid()
 
     def is_valid(self) -> bool:
         """
         Checks whether all the props in this is object are valid.
         """
-        user_props = self.__dict__
-        password_key = '_User__password'
-        email_key = '_User__email'
+        return self.isvalid_display_name() and self.isvalid_email() and \
+                self.isvalid_password()
 
-        if not password_key in user_props:
-            return False
-
-        for key, value in user_props.items():
-            if not value:
-                return False
-
-            if key == password_key and not self.password.is_valid():
-                return False
-
-            if key == email_key and not self.isvalid_email():
-                return False
-
-        return True
-
-    def isvalid_email(self):
-        return re.search('^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$',
-                         self.email)
-
-    def get_postgres_user_model(self):
+    def get_postgres_user_model(self) -> UserModel:
+        """
+        Returns None if the user is not valid.
+        """
         if self.is_valid():
             attr = {
                 Constants.DISPLAY_NAME: self.display_name,

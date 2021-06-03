@@ -33,5 +33,5 @@ def client_raises_exception():
 
 @pytest.fixture(autouse=True)
 def test_init(monkeypatch):
-    monkeypatch.setenv('minimum_hash_iteration', '4')
-    monkeypatch.setenv('maximum_hash_iteration', '12')
+    monkeypatch.setenv('MINIMUM_HASH_ITERATION', '4')
+    monkeypatch.setenv('MAXIMUM_HASH_ITERATION', '12')

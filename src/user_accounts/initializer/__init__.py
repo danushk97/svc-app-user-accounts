@@ -27,6 +27,9 @@ def _ensure_configs():
 
 
 def init_app(app, default_di_configurator=None):
+    """
+    Ensures Configs and initializes all required app extensions.
+    """
     _ensure_configs()
     logger.info('Config validation was successful.')
 

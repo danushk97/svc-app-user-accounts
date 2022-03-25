@@ -3,10 +3,12 @@ This module holds the unit of work class for sqlalchemy.
 """
 import os
 
+from user_accounts.config import Config
+
 from user_accounts.infrastructure.unit_of_work.abstract_unit_of_work import AbstractUnitOfWork
 from user_accounts.infrastructure.repository.user_repository import UserRepository
 from user_accounts.infrastructure.repository.password_repository import PasswordRepository
-from user_accounts.infrastructure.sqlalchemy_session import SQLAlchemySessionFactory
+from user_accounts.infrastructure.sqlalchemy.session import SQLAlchemySessionFactory
 
 
 class PostgresUnitOfWork(AbstractUnitOfWork):
@@ -21,7 +23,7 @@ class PostgresUnitOfWork(AbstractUnitOfWork):
         """
         Instantiates the class.
         """
-        self.db_connection_url = db_connection_url or os.environ.get('DB_CONNECTION_STRING')
+        self.db_connection_url = db_connection_url or Config.DB_CONNECTION_STRING
         self._session_factory = session_factory.get_instance(self.db_connection_url)
 
     def __enter__(self):

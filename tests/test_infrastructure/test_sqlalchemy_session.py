@@ -2,7 +2,7 @@ import pytest
 import os
 from sqlalchemy.orm import Session
 
-from user_accounts.infrastructure.sqlalchemy_session import SQLAlchemySessionFactory
+from user_accounts.infrastructure.sqlalchemy.session import SQLAlchemySessionFactory
 
 
 def test_sqlalchemy_get_instance_on_calling_twice_should_return_same_instance(postgres_container):

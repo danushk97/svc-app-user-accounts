@@ -3,8 +3,6 @@ This module holds the class which defines user entity.
 """
 import re
 
-from user_accounts.application.password_service import PasswordService
-
 from user_accounts.common.constants import Constants
 from user_accounts.domain.password import Password
 from user_accounts.domain.postgres_models.user import User as UserModel

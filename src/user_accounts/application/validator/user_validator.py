@@ -6,9 +6,8 @@ from injector import inject
 
 from user_accounts.application.error_code_generator.\
     invalid_user_error_code_generator import InvalidUserErrorCodeGenerator
-from user_accounts.domain.user import User
-from user_accounts.infrastructure.repository.user_repository import \
-    UserRepository
+from user_accounts.domain.entity.user import User
+from user_accounts.infrastructure.sqlalchemy.repository.user_repository import UserRepository
 from user_accounts.common.constants import Constants
 from user_accounts.common.exception import InvalidUserException
 

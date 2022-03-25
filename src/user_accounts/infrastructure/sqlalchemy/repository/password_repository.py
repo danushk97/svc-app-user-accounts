@@ -5,16 +5,15 @@ This modle holds the repository class for Password.
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import and_
 
-from user_accounts.infrastructure.repository.postgres_repository import \
-    PostgresRepository
-from user_accounts.domain.postgres_models.password import Password
-from user_accounts.domain.postgres_models.user import User
+from user_accounts.infrastructure._repository.password_repository import AbstractPasswordRepository
+from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
+from user_accounts.infrastructure.sqlalchemy.models.user import UserModel
 from user_accounts.common.constants import Constants
-from user_accounts.common.exception import PostgresRepositoryException
+from user_accounts.common.exception import RepositoryException
 from apputils.error_handler import ErrorHandler
 
 
-class PasswordRepository(PostgresRepository):
+class PasswordRepository(AbstractPasswordRepository):
     """
     Contains helper functions to query user's password info.
     """
@@ -23,9 +22,13 @@ class PasswordRepository(PostgresRepository):
         """
         Instantiates the class.
         """
-        super().__init__(session)
+        self._session = session
 
-    @ErrorHandler.handle_exception([SQLAlchemyError], PostgresRepositoryException)
+    @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
+    def add(self, entity) -> None:
+        self.session.add(entity)
+
+    @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
     def update_password_by_user_id(self, user_id: str, password_hash: str) -> int:
         """
         Upates the password for the user_id.
@@ -38,17 +41,17 @@ class PasswordRepository(PostgresRepository):
             row_affected (int): Number of rows affected.
 
         Raises:
-            PostgresRepositoryException: On SQLAlachemyError
+            RepositoryException: On SQLAlachemyError
         """
         attr = {Constants.CREDENTIAL: password_hash}
-        row_affected = self.session\
-                            .query(Password)\
-                            .filter(Password.user_id == user_id)\
+        row_affected = self._session\
+                            .query(PasswordModel)\
+                            .filter(PasswordModel.user_id == user_id)\
                             .update({Constants.ATTR: attr})
 
         return row_affected
 
-    @ErrorHandler.handle_exception([SQLAlchemyError], PostgresRepositoryException)
+    @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
     def get_password_hash_by_email(self, email: str) -> tuple:
         """
         Fetches password hash for the user_id.
@@ -60,12 +63,12 @@ class PasswordRepository(PostgresRepository):
             user_id (str): User id, password_hash (str): Password Hash.
 
         Raises:
-            PostgresRepositoryException: On SQLAlachemyError
+            RepositoryException: On SQLAlachemyError
         """
-        password = self.session\
-                       .query(Password)\
-                       .join(User, and_(Password.user_id == User.stable_id))\
-                       .filter(User.attr[Constants.EMAIL].astext == email)\
+        password = self._session\
+                       .query(PasswordModel)\
+                       .join(UserModel, and_(PasswordModel.user_id == UserModel.stable_id))\
+                       .filter(UserModel.attr[Constants.EMAIL].astext == email)\
                        .one_or_none()
 
         if password:

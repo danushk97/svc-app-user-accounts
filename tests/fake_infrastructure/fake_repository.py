@@ -3,7 +3,7 @@ import bcrypt
 from random import randint
 from tests.fake_error_code.fake_error_code import FakeErrorCode
 
-from user_accounts.common.exception import PostgresRepositoryException
+from user_accounts.common.exception import RepositoryException
 
 
 class FakePostgresRepository:
@@ -22,15 +22,15 @@ class FakeUserRepositoryReturnsEmptyList(FakePostgresRepository):
 
 class FakeUserRepositoryRasisesRepoException(FakePostgresRepository):
     def get_user_by_attr_field(self, field, value):
-        raise PostgresRepositoryException([FakeErrorCode.REPO_ERROR])
+        raise RepositoryException([FakeErrorCode.REPO_ERROR])
 
 
 class FakePasswordRepositoryRasisesRepoException(FakePostgresRepository):
     def update_password_by_user_id(self, user_id, password):
-        raise PostgresRepositoryException([FakeErrorCode.REPO_ERROR])
+        raise RepositoryException([FakeErrorCode.REPO_ERROR])
 
     def get_password_hash_by_email(self, user_id):
-        raise PostgresRepositoryException([FakeErrorCode.REPO_ERROR])
+        raise RepositoryException([FakeErrorCode.REPO_ERROR])
 
 
 class FakeUserRepository(FakePostgresRepository):

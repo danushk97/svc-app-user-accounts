@@ -7,37 +7,33 @@ from injector import inject
 from apputils.error_handler import ErrorHandler
 from apputils.status_code import StatusCode
 
-from user_accounts.infrastructure.unit_of_work.postgres import \
-    PostgresUnitOfWork
-from user_accounts.application.base_service import BaseService
+from user_accounts.infrastructure.sqlalchemy.unit_of_work import SQLAlchemyUnitOfWork
+from user_accounts.application._service import Service
 from user_accounts.common.constants import Constants
 from user_accounts.common.exception import PasswordServiceException
 from user_accounts.common.exception import InvalidRequestException
 from user_accounts.common.exception import InvalidPasswordException
-from user_accounts.common.exception import InvalidCredetialException
-from user_accounts.common.exception import PostgresRepositoryException
-from user_accounts.common.error_codes.invalid_user_error_codes import \
-    InvalidUserErrorCodes
-from user_accounts.domain.password import Password
-from user_accounts.domain.postgres_models.password import Password as PasswordModel
+from user_accounts.common.exception import RepositoryException
+from user_accounts.common.error_codes.invalid_user_error_codes import InvalidUserErrorCodes
+from user_accounts.domain.entity.password import Password
 
 
-class PasswordService(BaseService):
+class PasswordService(Service):
     """
     Holds business usecase/logic which are related to password creation/updation.
 
     Attributes:
-        postgres_unit_of_work (PostgresUnitOfWork): Helps communicating with
+        postgres_unit_of_work (SQLAlchemyUnitOfWork): Helps communicating with
         the postgres database.
     """
     @inject
-    def __init__(self, unit_of_work: PostgresUnitOfWork):
+    def __init__(self, unit_of_work: SQLAlchemyUnitOfWork):
         """
         Instantiates the class.
         """
         self.unit_of_work = unit_of_work
 
-    @ErrorHandler.handle_exception([PostgresRepositoryException],
+    @ErrorHandler.handle_exception([RepositoryException],
                                     PasswordServiceException)
     def update_password(self, user_id: str, password: str) -> dict:
         """
@@ -57,7 +53,7 @@ class PasswordService(BaseService):
         self.initiate_db_transaction(self.__update_password, user_id,
                                      password.password_hash.decode('utf-8'))
 
-    @ErrorHandler.handle_exception([PostgresRepositoryException],
+    @ErrorHandler.handle_exception([RepositoryException],
                                     PasswordServiceException)
     def validate_credential(self, email: str, password: str) -> None:
         """
@@ -80,13 +76,13 @@ class PasswordService(BaseService):
 
         return jwt_token
 
-    def __get_password_hash(self, unit_of_work: PostgresUnitOfWork,
+    def __get_password_hash(self, unit_of_work: SQLAlchemyUnitOfWork,
                             email: str) -> tuple:
         """
         Helps to get password hash of the under the requested user_id.
 
         Args:
-            unit_of_work (PostgresUnitOfWork)
+            unit_of_work (SQLAlchemyUnitOfWork)
             email (str): User email id.
 
         Returns:
@@ -107,13 +103,13 @@ class PasswordService(BaseService):
         return user_password[0], user_password[1]
 
 
-    def __update_password(self, unit_of_work: PostgresUnitOfWork,
+    def __update_password(self, unit_of_work: SQLAlchemyUnitOfWork,
                           user_id: str, password_hash: str):
         """
         Helps to update password.
 
         Args:
-            unit_of_work (PostgresUnitOfWork): An interface to communicate with
+            unit_of_work (SQLAlchemyUnitOfWork): An interface to communicate with
             Database.
             user_id (str): User ID.
             password_hash (str): Hashed password string.

@@ -5,7 +5,7 @@ This module holds the class which is responsible to validate request data.
 from user_accounts.common.constants import Constants
 from user_accounts.common.error_codes.invalid_user_error_codes import \
     InvalidUserErrorCodes
-from user_accounts.domain.user import User
+from user_accounts.domain.entity.user import User
 
 
 class InvalidUserErrorCodeGenerator:

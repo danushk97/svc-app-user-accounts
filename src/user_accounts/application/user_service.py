@@ -6,26 +6,25 @@ user account detail.
 from injector import inject
 from apputils.error_handler import ErrorHandler
 
-from user_accounts.infrastructure.unit_of_work.postgres import \
-    PostgresUnitOfWork
+from user_accounts.infrastructure.sqlalchemy.unit_of_work import SQLAlchemyUnitOfWork
 from user_accounts.common import exception
-from user_accounts.domain.user import User
+from user_accounts.domain.entity.user import User
 from user_accounts.application.validator.user_validator import UserValidator
-from user_accounts.application.base_service import BaseService
+from user_accounts.application._service import Service
 
 
-class UserService(BaseService):
+class UserService(Service):
     """
     Holds business usecase/logic which are related to user
     creation/updation/deletion.
 
     Attributes:
-        postgres_unit_of_work (PostgresUnitOfWork): Helps communicating with
+        postgres_unit_of_work (SQLAlchemyUnitOfWork): Helps communicating with
         the postgres database.
         validator (UserValidator): Helps to validate user data.
     """
     @inject
-    def __init__(self, unit_of_work: PostgresUnitOfWork,
+    def __init__(self, unit_of_work: SQLAlchemyUnitOfWork,
                  validator: UserValidator):
         """
         Instantiates the class.
@@ -33,8 +32,7 @@ class UserService(BaseService):
         self.unit_of_work = unit_of_work
         self.validator = validator
 
-    @ErrorHandler.handle_exception([exception.PostgresRepositoryException],
-                                   exception.UserServiceException)
+    @ErrorHandler.handle_exception([exception.RepositoryException], exception.UserServiceException)
     def create_user(self, user_info: dict) -> dict:
         """
         Creates user.

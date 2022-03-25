@@ -1,17 +1,15 @@
 """
 This module holds the unit of work class for sqlalchemy.
 """
-import os
-
 from user_accounts.config import Config
 
-from user_accounts.infrastructure.unit_of_work.abstract_unit_of_work import AbstractUnitOfWork
-from user_accounts.infrastructure.repository.user_repository import UserRepository
-from user_accounts.infrastructure.repository.password_repository import PasswordRepository
+from user_accounts.infrastructure._unit_of_work import AbstractUnitOfWork
+from user_accounts.infrastructure.sqlalchemy.repository.user_repository import UserRepository
+from user_accounts.infrastructure.sqlalchemy.repository.password_repository import PasswordRepository
 from user_accounts.infrastructure.sqlalchemy.session import SQLAlchemySessionFactory
 
 
-class PostgresUnitOfWork(AbstractUnitOfWork):
+class SQLAlchemyUnitOfWork(AbstractUnitOfWork):
     """
     Handles and keeps track of all the transaction made with the database and
     also handles the database session.

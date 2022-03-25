@@ -1,7 +1,6 @@
 import pytest
 
-from user_accounts.infrastructure.unit_of_work.abstract_unit_of_work import \
-    AbstractUnitOfWork
+from user_accounts.infrastructure._unit_of_work import AbstractUnitOfWork
 
 
 def test_abstract_unit_of_work_methods_raises_not_implemented_error():

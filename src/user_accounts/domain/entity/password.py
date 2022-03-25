@@ -3,19 +3,19 @@ This module holds the class which defines password entity.
 """
 import logging
 import os
+from xml.dom.minidom import Entity
 import bcrypt
 from random import randint
 
+from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
 from user_accounts.common.exception import InvalidCredetialException
 from user_accounts.common.constants import Constants
-from user_accounts.domain.postgres_models.password import Password as \
-    PasswordModel
 
 
 logger = logging.getLogger(__name__)
 
 
-class Password:
+class Password(Entity):
     """
     Password is an entity.
 

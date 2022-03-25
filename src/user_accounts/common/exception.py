@@ -4,6 +4,7 @@ This module holds the exception classes.
 
 from apputils.exception import AppException
 from apputils.status_code import StatusCode
+
 from user_accounts.common.error_codes.auth_error_code import AuthErrorCodes
 
 
@@ -15,7 +16,7 @@ class UserServiceException(AppException):
     pass
 
 
-class PostgresRepositoryException(AppException):
+class RepositoryException(AppException):
     pass
 
 

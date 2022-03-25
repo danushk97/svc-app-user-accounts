@@ -1,27 +1,20 @@
 import pytest
 
-from tests.fake_infrastructure.fake_sqlalchmey_session import \
-    FakeSQLAlchemySession, FakeUnitOfWorkRaisesSqlError
-
-from user_accounts.infrastructure.repository.user_repository import \
-    UserRepository
-from user_accounts.common.exception import PostgresRepositoryException
+from user_accounts.infrastructure._repository.user_repository import AbstractUserRepository
 
 
 @pytest.fixture
 def user_repo():
-    return UserRepository(FakeSQLAlchemySession())
+    class UserRepo(AbstractUserRepository):
+        def add(self, entity):
+            return super().add(entity)
+
+        def get_user_by_attr_field(self, attr_field: str, attr_field_value: str) -> list:
+            return super().get_user_by_attr_field(attr_field, attr_field_value)
+
+    return UserRepo()
 
 
-@pytest.fixture
-def user_repo_raise_sql_error():
-    return UserRepository(FakeUnitOfWorkRaisesSqlError())
-
-
-def test_get_user_given_valid_data_returns_list(user_repo):
-    assert user_repo.get_user_by_attr_field('key', 'value') == ['data']
-
-
-def test_add_rasies_postgres_repo_exception_on_sql_error(user_repo_raise_sql_error):
-    with pytest.raises(PostgresRepositoryException):
-        user_repo_raise_sql_error.get_user_by_attr_field('key', 'value')
+def test_get_user_by_attr_field_raises_not_implemented_error(user_repo: AbstractUserRepository):
+    with pytest.raises(NotImplementedError):
+        user_repo.get_user_by_attr_field('key', 'value')

@@ -1,4 +1,4 @@
-class BaseService:
+class Service:
     def initiate_db_transaction(self, function, *args):
         data = None
 

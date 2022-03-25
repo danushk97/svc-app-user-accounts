@@ -2,13 +2,14 @@
 This module holds the class which defines user entity.
 """
 import re
+from xml.dom.minidom import Entity
 
 from user_accounts.common.constants import Constants
-from user_accounts.domain.password import Password
-from user_accounts.domain.postgres_models.user import User as UserModel
+from user_accounts.domain.entity.password import Password
+from user_accounts.infrastructure.sqlalchemy.models.user import UserModel
 
 
-class User:
+class User(Entity):
     """
     User is an entity.
 

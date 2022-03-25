@@ -26,7 +26,7 @@ class PostgresUnitOfWork(AbstractUnitOfWork):
         """
         Instantiates the class.
         """
-        self.db_connection_url = db_connection_url or os.environ.get('DB_CONNECTION_URL')
+        self.db_connection_url = db_connection_url or os.environ.get('DB_CONNECTION_STRING')
         self.__session_factory = session_factory.get_instance(self.db_connection_url)
 
     def __enter__(self):

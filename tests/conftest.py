@@ -21,13 +21,13 @@ def test_di_exception_config(binder):
 
 @pytest.fixture
 def client():
-    with create_app(di_config=test_di_config).test_client() as http_client:
+    with create_app(di_configurator=test_di_config).test_client() as http_client:
         yield http_client
 
 
 @pytest.fixture
 def client_raises_exception():
-    with create_app(di_config=test_di_exception_config).test_client() as http_client:
+    with create_app(di_configurator=test_di_exception_config).test_client() as http_client:
         yield http_client
 
 

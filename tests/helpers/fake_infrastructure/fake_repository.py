@@ -1,7 +1,7 @@
 import os
 import bcrypt
 from random import randint
-from tests.fake_error_code.fake_error_code import FakeErrorCode
+from tests.helpers.fake_error_code.fake_error_code import FakeErrorCode
 
 from user_accounts.common.exception import RepositoryException
 

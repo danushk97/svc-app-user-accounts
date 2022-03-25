@@ -1,4 +1,4 @@
-from tests.fake_infrastructure.fake_sqlalchmey_session import FakeSQLAlchemySession
+from tests.helpers.fake_infrastructure.fake_sqlalchmey_session import FakeSQLAlchemySession
 from user_accounts.infrastructure.sqlalchemy.unit_of_work import SQLAlchemyUnitOfWork
 from user_accounts.infrastructure.sqlalchemy.repository.user_repository import UserRepository
 from user_accounts.infrastructure.sqlalchemy.repository.password_repository import PasswordRepository

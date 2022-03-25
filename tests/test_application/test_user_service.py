@@ -1,8 +1,8 @@
 import pytest
 
-from tests.fake_infrastructure.fake_unit_of_work import FakeUnitOfWork
-from tests.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfWork
-from tests.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfWorkRasiesRepoException
+from tests.helpers.fake_infrastructure.fake_unit_of_work import FakeUnitOfWork
+from tests.helpers.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfWork
+from tests.helpers.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfWorkRasiesRepoException
 
 from user_accounts.application.user_service import UserService
 from user_accounts.application.validator.user_validator import \

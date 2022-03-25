@@ -1,9 +1,9 @@
 import pytest
 import jwt
 
-from tests.fake_infrastructure.fake_unit_of_work import FakeUnitOfWork
-from tests.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfWorkRasiesRepoException
-from tests.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfWork
+from tests.helpers.fake_infrastructure.fake_unit_of_work import FakeUnitOfWork
+from tests.helpers.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfWorkRasiesRepoException
+from tests.helpers.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfWork
 from user_accounts.application.password_service import PasswordService
 from user_accounts.common.exception import InvalidPasswordException
 from user_accounts.common.exception import InvalidRequestException

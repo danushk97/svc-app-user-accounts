@@ -1,6 +1,6 @@
 import pytest
 
-from tests.fake_infrastructure.fake_sqlalchmey_session import FakeSQLAlchemySession, FakeUnitOfWorkRaisesSqlError
+from tests.helpers.fake_infrastructure.fake_sqlalchmey_session import FakeSQLAlchemySession, FakeUnitOfWorkRaisesSqlError
 
 from user_accounts.infrastructure.sqlalchemy.repository.user_repository import UserRepository
 from user_accounts.common.exception import RepositoryException

@@ -1,8 +1,7 @@
 import pytest
 
-from tests.fake_service.fake_user_service import FakeUserService, FakeUserServiceRaisesException
-from tests.fake_service.fake_password_service import FakePasswordService, \
-    FakePasswordServiceRaisesException
+from tests.helpers.fake_service.fake_user_service import FakeUserService, FakeUserServiceRaisesException
+from tests.helpers.fake_service.fake_password_service import FakePasswordService, FakePasswordServiceRaisesException
 
 from user_accounts.manage import create_app
 from user_accounts.application.user_service import UserService

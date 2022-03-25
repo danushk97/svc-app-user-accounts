@@ -3,11 +3,9 @@ This modle holds the repository class for User.
 """
 
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import text
 from apputils.error_handler import ErrorHandler
 
-from user_accounts.infrastructure.repository.postgres_repository import \
-    PostgresRepository
+from user_accounts.infrastructure.repository.postgres_repository import PostgresRepository
 from user_accounts.common.exception import PostgresRepositoryException
 from user_accounts.domain.postgres_models.user import User
 

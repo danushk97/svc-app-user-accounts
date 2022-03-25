@@ -16,24 +16,24 @@ class SQLAlchemySessionFactory:
         engine (Engine): Database engine
         session_factory (Session): Session Factory.
     """
-    __instance = None
+    _instance = None
 
     def __init__(self, db_connection_url: str):
         """
         Instantiates the class.
         """
-        if not SQLAlchemySessionFactory.__instance:
+        if not SQLAlchemySessionFactory._instance:
             engine = create_engine(db_connection_url)
-            self.__session_factory = scoped_session(sessionmaker(bind=engine))
-            SQLAlchemySessionFactory.__instance = self
+            self._session_factory = scoped_session(sessionmaker(bind=engine))
+            SQLAlchemySessionFactory._instance = self
         else:
             raise Exception('You cannot instantiate SQLAlchemySession twice!')
 
     def __call__(self):
-        return self.__session_factory()
+        return self._session_factory()
 
     def remove(self):
-        self.__session_factory.remove()
+        self._session_factory.remove()
 
     @staticmethod
     def get_instance(db_connection_url: str):
@@ -46,7 +46,7 @@ class SQLAlchemySessionFactory:
         Returns:
             SQLAlchemySession
         """
-        if SQLAlchemySessionFactory.__instance:
-            return SQLAlchemySessionFactory.__instance
+        if SQLAlchemySessionFactory._instance:
+            return SQLAlchemySessionFactory._instance
 
         return SQLAlchemySessionFactory(db_connection_url)

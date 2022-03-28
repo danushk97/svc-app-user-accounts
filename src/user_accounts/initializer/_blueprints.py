@@ -1,3 +1,7 @@
+"""
+This module holds functions which helps to register blueprints.
+"""
+
 import importlib
 
 

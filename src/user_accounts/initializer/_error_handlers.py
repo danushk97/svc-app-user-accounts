@@ -1,3 +1,7 @@
+"""
+This module holds functions which helps to configure error handlers.
+"""
+
 from apputils.error_handler import ErrorHandler
 
 from user_accounts.common.exception import AppException

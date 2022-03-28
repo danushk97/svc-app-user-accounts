@@ -1,3 +1,7 @@
+"""
+Ensures app's configs and initializes the required extensions for the app.
+"""
+
 import logging
 import inspect
 from flask_injector import FlaskInjector

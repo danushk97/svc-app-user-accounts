@@ -1,3 +1,7 @@
+"""
+This module holds functions which helps to configure dependency injection.
+"""
+
 from user_accounts.application.user_service import UserService
 from user_accounts.application.validator.user_validator import UserValidator
 from user_accounts.infrastructure.sqlalchemy.unit_of_work import SQLAlchemyUnitOfWork

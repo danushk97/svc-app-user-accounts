@@ -1,6 +1,7 @@
 """
 This module holds the function which retruns the instance of app.
 """
+
 from flask  import Flask
 
 from user_accounts.initializer import init_app

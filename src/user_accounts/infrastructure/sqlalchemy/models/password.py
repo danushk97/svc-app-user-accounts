@@ -13,7 +13,7 @@ class PasswordModel(Base):
     id = Column(Integer, primary_key=True)
     stable_id = Column(postgresql.UUID, nullable=False)
     user_id = Column(postgresql.UUID, ForeignKey('user_accounts.stable_id'), nullable=False)
-    attr = Column(postgresql.JSONB, nullable=False)
+    hash = Column(postgresql.BYTEA, nullable=False)
     active_flag = Column(postgresql.BOOLEAN, nullable=False, default=True)
     created_date = Column(DateTime, default=datetime.utcnow, nullable=False)
 
@@ -22,4 +22,4 @@ class PasswordModel(Base):
         Instantiates the class.
         """
         self.stable_id = kwargs.get(Constants.STABLE_ID, str(uuid4()))
-        self.attr = kwargs.get(Constants.ATTR)
+        self.hash = kwargs.get(Constants.HASH)

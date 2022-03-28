@@ -43,11 +43,10 @@ class PasswordRepository(AbstractPasswordRepository):
         Raises:
             RepositoryException: On SQLAlachemyError
         """
-        attr = {Constants.HASH: password_hash}
         row_affected = self._session\
-                            .query(PasswordModel)\
-                            .filter(PasswordModel.user_id == user_id)\
-                            .update({Constants.ATTR: attr})
+            .query(PasswordModel)\
+            .filter(PasswordModel.user_id == user_id)\
+            .update({Constants.HASH: password_hash})
 
         return row_affected
 
@@ -72,6 +71,6 @@ class PasswordRepository(AbstractPasswordRepository):
                        .one_or_none()
 
         if password:
-            password_hash = password.attr[Constants.HASH]
+            password_hash = password.hash
 
             return password.user_id, password_hash

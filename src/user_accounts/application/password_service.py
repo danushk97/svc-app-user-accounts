@@ -15,7 +15,7 @@ from user_accounts.common.exception import InvalidRequestException
 from user_accounts.common.exception import InvalidPasswordException
 from user_accounts.common.exception import RepositoryException
 from user_accounts.common.error_codes.invalid_user_error_codes import InvalidUserErrorCodes
-from user_accounts.domain.entity.password import Password
+from user_accounts.domain.value_object.password import Password
 
 
 class PasswordService(Service):
@@ -50,7 +50,7 @@ class PasswordService(Service):
             ])
 
         self.initiate_db_transaction(
-            self._update_password, user_id, password.attr[Constants.HASH]
+            self._update_password, user_id, password.hash
         )
 
     @ErrorHandler.handle_exception([RepositoryException], PasswordServiceException)
@@ -68,7 +68,7 @@ class PasswordService(Service):
         self._check_email(email)
         user_id, credential = self.initiate_db_transaction(self._get_password_hash, email)
 
-        if not Password.do_match(password.encode(), credential.encode()):
+        if not Password.do_match(password.encode(), credential):
             raise InvalidCredetialException()
 
         # TODO: Need to move secret to env_var and to update the payload

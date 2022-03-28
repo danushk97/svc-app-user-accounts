@@ -8,7 +8,6 @@ from random import randint
 
 from user_accounts.config import Config
 from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
-from user_accounts.common.constants import Constants
 
 
 logger = logging.getLogger(__name__)
@@ -31,12 +30,10 @@ class Password(Entity):
             int(Config.MINIMUM_HASH_ITERATION), int(Config.MAXIMUM_HASH_ITERATION)
         )
         self.password_str = password
-        self.attr = {
-            Constants.HASH: bcrypt.hashpw(
-                password.encode('utf-8'),
-                bcrypt.gensalt(rounds=hashing_itertation)
-            ).decode()
-        }
+        self.hash = bcrypt.hashpw(
+            password.encode('utf-8'),
+            bcrypt.gensalt(rounds=hashing_itertation)
+        )
 
     @property
     def password_str(self) -> str:
@@ -57,7 +54,7 @@ class Password(Entity):
         return isinstance(self.password_str, str) and 7 < len(self.password_str) < 41
 
     def get_password_model(self):
-        return PasswordModel(**self.attr)
+        return PasswordModel(hash=self.hash)
 
     @staticmethod
     def do_match(password: bytes, hashed_password: bytes) -> bool:

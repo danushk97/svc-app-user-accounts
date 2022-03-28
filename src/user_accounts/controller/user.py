@@ -5,8 +5,8 @@ account detail.
 
 from flask import Blueprint, request
 from injector import inject
-
 from apputils.http_verb import HttpVerb
+
 from user_accounts.application.user_service import UserService
 
 

@@ -8,7 +8,6 @@ from random import randint
 
 from user_accounts.config import Config
 from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
-from user_accounts.common.exception import InvalidCredetialException
 from user_accounts.common.constants import Constants
 
 
@@ -61,6 +60,5 @@ class Password(Entity):
         return PasswordModel(**self.attr)
 
     @staticmethod
-    def validate_password(password: bytes, hashed_password: bytes) -> None:
-        if not bcrypt.checkpw(password, hashed_password):
-            raise InvalidCredetialException()
+    def do_match(password: bytes, hashed_password: bytes) -> bool:
+        return bcrypt.checkpw(password, hashed_password)

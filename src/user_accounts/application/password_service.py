@@ -10,7 +10,7 @@ from apputils.status_code import StatusCode
 from user_accounts.infrastructure.sqlalchemy.unit_of_work import SQLAlchemyUnitOfWork
 from user_accounts.application._service import Service
 from user_accounts.common.constants import Constants
-from user_accounts.common.exception import PasswordServiceException
+from user_accounts.common.exception import InvalidCredetialException, PasswordServiceException
 from user_accounts.common.exception import InvalidRequestException
 from user_accounts.common.exception import InvalidPasswordException
 from user_accounts.common.exception import RepositoryException
@@ -33,8 +33,7 @@ class PasswordService(Service):
         """
         self.unit_of_work = unit_of_work
 
-    @ErrorHandler.handle_exception([RepositoryException],
-                                    PasswordServiceException)
+    @ErrorHandler.handle_exception([RepositoryException], PasswordServiceException)
     def update_password(self, user_id: str, password: str) -> dict:
         """
         Update Password.
@@ -67,9 +66,10 @@ class PasswordService(Service):
             jwt_token ()
         """
         self._check_email(email)
-        user_id, credential = self.initiate_db_transaction(self._get_password_hash,
-                                                  email)
-        Password.validate_password(password.encode(), credential.encode())
+        user_id, credential = self.initiate_db_transaction(self._get_password_hash, email)
+
+        if not Password.do_match(password.encode(), credential.encode()):
+            raise InvalidCredetialException()
 
         # TODO: Need to move secret to env_var and to update the payload
         jwt_token = jwt.encode({Constants.USER_ID: user_id}, 'secret')

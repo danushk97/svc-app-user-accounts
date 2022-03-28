@@ -37,16 +37,16 @@ class InvalidUserErrorCodeGenerator:
         """
         error_codes = []
         required_values = [
-            (user.email, InvalidUserErrorCodes.INVALID_EMAIL),
+            (user.attr.get(Constants.EMAIL), InvalidUserErrorCodes.INVALID_EMAIL),
             (user.password, InvalidUserErrorCodes.INVALID_PASSWORD),
-            (user.display_name, InvalidUserErrorCodes.INVALID_DISPLAY_NAME)
+            (user.attr.get(Constants.DISPLAY_NAME), InvalidUserErrorCodes.INVALID_DISPLAY_NAME)
         ]
         self.__update_error_codes_for_empty_value(required_values, error_codes)
 
         if hasattr(user, Constants.PASSWORD) and not user.password.is_valid():
             error_codes.append(InvalidUserErrorCodes.INVALID_PASSWORD_LENGTH)
 
-        if user.email and not user.isvalid_email():
+        if user.attr.get(Constants.EMAIL) and not user.isvalid_email():
             error_codes.append(InvalidUserErrorCodes.INVALID_EMAIL)
 
         return error_codes

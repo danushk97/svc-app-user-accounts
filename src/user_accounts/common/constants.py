@@ -8,6 +8,7 @@ from apputils.read_only import ReadOnly
 class Constants(ReadOnly):
     #string literals
     EMAIL = 'email'
+    HASH = 'hash'
     DISPLAY_NAME = 'display_name'
     PASSWORD = 'password'
     SALT = 'salt'

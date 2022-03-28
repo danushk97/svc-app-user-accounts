@@ -3,6 +3,7 @@ This modle holds the repository class for User.
 """
 
 from sqlalchemy.exc import SQLAlchemyError
+from user_accounts.domain.entity.user import User
 from apputils.error_handler import ErrorHandler
 
 from user_accounts.infrastructure._repository.user_repository import AbstractUserRepository
@@ -22,8 +23,13 @@ class UserRepository(AbstractUserRepository):
         self._session = session
 
     @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
-    def add(self, entity) -> None:
-        self.session.add(entity)
+    def add(self, entity: User) -> None:
+        user = entity.get_user_model()
+        self._session.add(user)
+        self._session.add_all(user.password)
+        entity.stable_id = user.stable_id
+
+        return entity
 
     @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
     def get_user_by_attr_field(self, attr_field: str, attr_field_value: str) -> list:

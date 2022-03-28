@@ -4,6 +4,9 @@ This module holds the class which defines user entity.
 import re
 from xml.dom.minidom import Entity
 
+from user_accounts.infrastructure.sqlalchemy.models import password
+
+from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
 from user_accounts.common.constants import Constants
 from user_accounts.domain.entity.password import Password
 from user_accounts.infrastructure.sqlalchemy.models.user import UserModel
@@ -22,8 +25,8 @@ class User(Entity):
         """
         Instantiates the class.
         """
-        self.email = kwargs.get(Constants.EMAIL)
-        self.display_name = kwargs.get(Constants.DISPLAY_NAME)
+        self.stable_id = kwargs.get(Constants.STABLE_ID)
+        self.attr = kwargs.get(Constants.ATTR, {})
         self.password = Password(kwargs.get(Constants.PASSWORD, ''))
 
     @property
@@ -38,11 +41,11 @@ class User(Entity):
         self.__password = password
 
     def isvalid_display_name(self) -> bool:
-        return bool(self.display_name)
+        return bool(self.attr.get(Constants.DISPLAY_NAME))
 
     def isvalid_email(self) -> bool:
         return re.search('^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$',
-                         self.email) is not None
+                         self.attr.get(Constants.EMAIL, '')) is not None
 
     def isvalid_password(self) -> bool:
         return self.password.is_valid()
@@ -51,16 +54,16 @@ class User(Entity):
         """
         Checks whether all the props in this is object are valid.
         """
-        return self.isvalid_display_name() and self.isvalid_email() and \
-                self.isvalid_password()
+        return self.isvalid_display_name() and self.isvalid_email() and self.isvalid_password()
 
-    def get_postgres_user_model(self) -> UserModel:
+    def get_user_model(self) -> UserModel:
         """
         Returns None if the user is not valid.
         """
         if self.is_valid():
-            attr = {
-                Constants.DISPLAY_NAME: self.display_name,
-                Constants.EMAIL: self.email,
-            }
-            return UserModel(attr=attr)
+            user_model = UserModel(
+                attr=self.attr,
+            )
+            user_model.password.append(self.password.get_password_model())
+
+            return user_model

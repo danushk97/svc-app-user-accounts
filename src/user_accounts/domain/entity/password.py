@@ -2,11 +2,11 @@
 This module holds the class which defines password entity.
 """
 import logging
-import os
-from xml.dom.minidom import Entity
 import bcrypt
+from xml.dom.minidom import Entity
 from random import randint
 
+from user_accounts.config import Config
 from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
 from user_accounts.common.exception import InvalidCredetialException
 from user_accounts.common.constants import Constants
@@ -28,40 +28,27 @@ class Password(Entity):
         """
         Instantiates class.
         """
-        minimum_hash_iteration = os.environ.get(Constants.MINIMUM_HASH_ITERATION)
-        maximum_hash_iteration = os.environ.get(Constants.MAXIMUM_HASH_ITERATION)
-        hashing_itertation = randint(int(minimum_hash_iteration),
-                                     int(maximum_hash_iteration))
+        hashing_itertation = randint(
+            int(Config.MINIMUM_HASH_ITERATION), int(Config.MAXIMUM_HASH_ITERATION)
+        )
         self.password_str = password
-        self.salt = bcrypt.gensalt(rounds=hashing_itertation)
-        self.password_hash = bcrypt.hashpw(password.encode('utf-8'), self.salt)
+        self.attr = {
+            Constants.HASH: bcrypt.hashpw(
+                password.encode('utf-8'),
+                bcrypt.gensalt(rounds=hashing_itertation)
+            ).decode()
+        }
 
     @property
     def password_str(self) -> str:
-        return self.__password_str
-
-    @property
-    def salt(self) -> str:
-        return self.__salt
-
-    @property
-    def password_hash(self) -> str:
-        return self.__password_hash
+        return self._password_str
 
     @password_str.setter
     def password_str(self, password: str) -> None:
         if not isinstance(password, str):
             raise ValueError('password value must be string')
 
-        self.__password_str = password
-
-    @password_hash.setter
-    def password_hash(self, password_hash: bytes) -> None:
-        self.__password_hash = password_hash
-
-    @salt.setter
-    def salt(self, salt: bytes) -> None:
-        self.__salt = salt
+        self._password_str = password
 
     def is_valid(self) -> bool:
         """
@@ -70,15 +57,8 @@ class Password(Entity):
         """
         return isinstance(self.password_str, str) and 7 < len(self.password_str) < 41
 
-    def get_postgres_password_model(self, user_id: str):
-        password_attr = {
-                            Constants.USER_ID: user_id,
-                            Constants.ATTR: {
-                                Constants.CREDENTIAL: \
-                                self.password_hash.decode('utf-8')
-                            }
-                        }
-        return PasswordModel(**password_attr)
+    def get_password_model(self):
+        return PasswordModel(**self.attr)
 
     @staticmethod
     def validate_password(password: bytes, hashed_password: bytes) -> None:

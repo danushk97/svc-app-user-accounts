@@ -26,7 +26,7 @@ class PasswordRepository(AbstractPasswordRepository):
 
     @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
     def add(self, entity) -> None:
-        self.session.add(entity)
+        self._session.add(entity)
 
     @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
     def update_password_by_user_id(self, user_id: str, password_hash: str) -> int:
@@ -43,7 +43,7 @@ class PasswordRepository(AbstractPasswordRepository):
         Raises:
             RepositoryException: On SQLAlachemyError
         """
-        attr = {Constants.CREDENTIAL: password_hash}
+        attr = {Constants.HASH: password_hash}
         row_affected = self._session\
                             .query(PasswordModel)\
                             .filter(PasswordModel.user_id == user_id)\
@@ -72,6 +72,6 @@ class PasswordRepository(AbstractPasswordRepository):
                        .one_or_none()
 
         if password:
-            password_hash = password.attr[Constants.CREDENTIAL]
+            password_hash = password.attr[Constants.HASH]
 
             return password.user_id, password_hash

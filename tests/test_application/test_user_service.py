@@ -5,8 +5,7 @@ from tests.helpers.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfW
 from tests.helpers.fake_infrastructure.fake_unit_of_work import FakeEmptyUnitOfWorkRasiesRepoException
 
 from user_accounts.application.user_service import UserService
-from user_accounts.application.validator.user_validator import \
-    UserValidator
+from user_accounts.application.validator.user_validator import UserValidator
 from user_accounts.common.exception import InvalidUserException
 from user_accounts.common.exception import UserServiceException
 from user_accounts.application.error_code_generator\
@@ -49,55 +48,84 @@ def test_create_user_given_invalid_user_data_raises_invalid_user_exception(user_
 
 def test_create_user_given_invalid_password_raises_invalid_user_exception(user_service):
     with pytest.raises(InvalidUserException) as excinfo:
-        user_service.create_user({'email': 'email@gmail.com',
-                                  'display_name': 'name',
-                                  'phone_number': 1234567890})
+        user_service.create_user(
+            {
+                'attr':{
+                    'email': 'email@gmail.com',
+                    'display_name': 'name',
+                    'phone_number': 1234567890
+                }
+            }
+        )
     assert excinfo.value.error_codes == [INVALID_PASSWORD_LENGTH]
 
 
 def test_create_user_given_invalid_phone_and_password_length_raises_invalid_user_exception(user_service):
     with pytest.raises(InvalidUserException) as excinfo:
-        user_service.create_user({'email': 'email', 'display_name': 'name',
-                                  'phone_number': 123456789, 'password': '123'})
-
+        user_service.create_user(
+            {
+                'attr':{
+                    'email': 'email',
+                    'display_name': 'name',
+                    'phone_number': 123456789,
+                },
+                'password': '123'
+            }
+        )
     assert excinfo.value.error_codes == [INVALID_PASSWORD_LENGTH, INVALID_EMAIL]
 
 
 def test_create_user_given_invalid_password_length_raises_invalid_user_exception(user_service):
     with pytest.raises(InvalidUserException) as excinfo:
-        user_service.create_user({'email': 'email@gmail.com', 'display_name': 'name',
-                                  'phone_number': 1234567890, 'password': '123'})
-
+        user_service.create_user({
+            'attr':{
+                    'email': 'email@gmail.com',
+                    'display_name': 'name',
+                    'phone_number': 123456789
+                },
+                'password': '123'
+            }
+        )
     assert excinfo.value.error_codes == [INVALID_PASSWORD_LENGTH]
 
 
 def test_create_user_given_valid_input_then_returns_user_id(user_service_with_empty_repo):
     data = user_service_with_empty_repo.create_user({
-        'email': 'email@gmail.com',
-        'display_name': 'display_name',
-        'phone_number': 1234567890,
+        'attr':{
+            'email': 'email@gmail.com',
+            'display_name': 'name',
+        },
         'password': 'password'
-    })
+        }
+    )
     assert data['user_id'] == 1
 
 
 def test_create_user_given_duplicate_input_then_raises_invalid_user_exception(user_service):
     with pytest.raises(InvalidUserException) as excinfo:
         user_service.create_user({
+        'attr':{
             'email': 'email@gmail.com',
             'display_name': 'display_name',
-            'password': 'password'
-        })
+        },
+        'password': 'password'
+        }
+    )
     assert excinfo.value.error_codes == DUPLICATE_USER_DATA_ERROR_CODE
 
 
 def test_create_user_on_repository_exception_user_service_exception(user_service_raises_repo_exception):
     with pytest.raises(UserServiceException) as excinfo:
         user_service_raises_repo_exception.create_user({
+        'attr':{
             'email': 'email@gmail.com',
             'display_name': 'display_name',
-            'phone_number': 1234567890,
-            'password': 'password'
+        },
+        'password': 'password'
         })
-    assert excinfo.value.error_codes == [{'error_code': 0,
-                                          'error_description': 'repo error'}]
+    assert excinfo.value.error_codes == [
+        {
+            'error_code': 0,
+            'error_description': 'repo error'
+        }
+    ]

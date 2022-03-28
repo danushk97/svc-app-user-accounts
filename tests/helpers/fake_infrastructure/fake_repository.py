@@ -11,8 +11,9 @@ class FakePostgresRepository:
         self.session = session
 
     def add(self, entity):
-        entity.id = 1
-        return None
+        entity.stable_id = 1
+
+        return entity
 
 
 class FakeUserRepositoryReturnsEmptyList(FakePostgresRepository):

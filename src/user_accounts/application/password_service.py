@@ -42,19 +42,19 @@ class PasswordService(Service):
         Args:
             update_info (dict): Should hold the password and user_id.
         """
-        self.__check_user_id(user_id)
-        password = self.__get_password_object(password)
+        self._check_user_id(user_id)
+        password = self._get_password_object(password)
 
         if not password.is_valid():
             raise InvalidPasswordException([
                 InvalidUserErrorCodes.INVALID_PASSWORD_LENGTH
             ])
 
-        self.initiate_db_transaction(self.__update_password, user_id,
-                                     password.password_hash.decode('utf-8'))
+        self.initiate_db_transaction(
+            self._update_password, user_id, password.attr[Constants.HASH]
+        )
 
-    @ErrorHandler.handle_exception([RepositoryException],
-                                    PasswordServiceException)
+    @ErrorHandler.handle_exception([RepositoryException], PasswordServiceException)
     def validate_credential(self, email: str, password: str) -> None:
         """
         Validates credential and returns a JWT if the credential is valid.
@@ -66,8 +66,8 @@ class PasswordService(Service):
         Returns:
             jwt_token ()
         """
-        self.__check_email(email)
-        user_id, credential = self.initiate_db_transaction(self.__get_password_hash,
+        self._check_email(email)
+        user_id, credential = self.initiate_db_transaction(self._get_password_hash,
                                                   email)
         Password.validate_password(password.encode(), credential.encode())
 
@@ -76,8 +76,7 @@ class PasswordService(Service):
 
         return jwt_token
 
-    def __get_password_hash(self, unit_of_work: SQLAlchemyUnitOfWork,
-                            email: str) -> tuple:
+    def _get_password_hash(self, unit_of_work: SQLAlchemyUnitOfWork, email: str) -> tuple:
         """
         Helps to get password hash of the under the requested user_id.
 
@@ -103,8 +102,7 @@ class PasswordService(Service):
         return user_password[0], user_password[1]
 
 
-    def __update_password(self, unit_of_work: SQLAlchemyUnitOfWork,
-                          user_id: str, password_hash: str):
+    def _update_password(self, unit_of_work: SQLAlchemyUnitOfWork, user_id: str, password_hash: str):
         """
         Helps to update password.
 
@@ -118,8 +116,8 @@ class PasswordService(Service):
             PasswordServiceException: On no record got updated.
         """
         repository = unit_of_work.password_repository()
-        affected_rows = repository.update_password_by_user_id(user_id,
-                                                              password_hash)
+        affected_rows = repository.update_password_by_user_id(user_id, password_hash)
+
         if not affected_rows:
             raise PasswordServiceException([
                 InvalidUserErrorCodes.NO_USER_FOUND
@@ -127,16 +125,16 @@ class PasswordService(Service):
 
         unit_of_work.commit()
 
-    def __get_password_object(self, password: str) -> Password:
+    def _get_password_object(self, password: str) -> Password:
         return Password(password)
 
-    def __check_email(self, email: str):
+    def _check_email(self, email: str):
         if not email:
             raise InvalidRequestException([
                 InvalidUserErrorCodes.INVALID_EMAIL
             ])
 
-    def __check_user_id(self, user_id: str):
+    def _check_user_id(self, user_id: str):
         if not user_id:
             raise InvalidRequestException([
                 InvalidUserErrorCodes.INVALID_USER_ID

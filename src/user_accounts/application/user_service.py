@@ -43,29 +43,23 @@ class UserService(Service):
         Returns:
             user_id: Generated id of the user.
         """
-        user = self.__get_user_object(user_info)
+        user = self._get_user_object(user_info)
         self.validator.validate_user(user)
-        user_id = self.initiate_db_transaction(self.__create_user, user)
+        user_id = self.initiate_db_transaction(self._create_user, user)
 
         return {
             'user_id': user_id
         }
 
-    def __create_user(self, unit_of_work, user: User):
+    def _create_user(self, unit_of_work: SQLAlchemyUnitOfWork, user: User):
         repository = unit_of_work.user_repository()
         self.validator.validate_is_unique_user(user, repository)
-        user_model = user.get_postgres_user_model()
-        repository.add(user_model)
-        unit_of_work.flush()
-        password = user.password.get_postgres_password_model(
-            user_model.stable_id
-        )
-        repository.add(password)
+        repository.add(user)
         unit_of_work.commit()
 
-        return user_model.id
+        return user.stable_id
 
-    def __get_user_object(self, props: dict) -> User:
+    def _get_user_object(self, props: dict) -> User:
         """
         Instantiates User object.
 

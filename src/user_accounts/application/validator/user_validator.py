@@ -5,7 +5,7 @@ This module holds the UserValidator class.
 from injector import inject
 
 from user_accounts.application.error_code_generator.\
-    invalid_user_error_code_generator import InvalidUserErrorCodeGenerator
+invalid_user_error_code_generator import InvalidUserErrorCodeGenerator
 from user_accounts.domain.entity.user import User
 from user_accounts.infrastructure.sqlalchemy.repository.user_repository import UserRepository
 from user_accounts.common.constants import Constants
@@ -25,10 +25,8 @@ class UserValidator:
     def __init__(self, error_code_generator: InvalidUserErrorCodeGenerator):
         self.error_code_generator = error_code_generator
 
-    def validate_is_unique_user(self, user: User,
-                                repository: UserRepository,
-                                attr_keys=[Constants.EMAIL,
-                                           Constants.DISPLAY_NAME]):
+    def validate_is_unique_user(self, user: User, repository: UserRepository,
+                                attr_keys=[Constants.EMAIL, Constants.DISPLAY_NAME]):
         """
         Validates whether the user is unique.
 
@@ -45,7 +43,7 @@ class UserValidator:
         error_codes = []
 
         for key in attr_keys:
-            result = repository.get_user_by_attr_field(key, getattr(user, key))
+            result = repository.get_user_by_attr_field(key, user.attr.get(key))
             if result:
                 error_codes.extend([self.error_code_generator\
                            .generate_duplicate_user_error_code(key)])

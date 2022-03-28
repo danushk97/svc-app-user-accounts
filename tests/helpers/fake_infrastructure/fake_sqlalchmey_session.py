@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 class FakePassword:
     user_id = 'user_id'
     attr = {
-        'credential': 'password_hash'
+        'hash': 'password_hash'
     }
 
 
@@ -28,7 +28,7 @@ class FakeSQLAlchemySession:
         return None
 
     def update(self, value):
-        if value['attr']['credential'] == 'invalid':
+        if value['attr']['hash'] == 'invalid':
             return 0
 
         return 1

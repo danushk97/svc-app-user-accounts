@@ -18,8 +18,8 @@ class Password(ValueObject):
     Password is a value object.
 
     Attributes:
-        password_str (str): password string
-        password_hash (str): Hash of the user's password
+        password_str (str): password string.
+        password_hash (str): encrypted form of password_str.
     """
     def __init__(self, password: str):
         """

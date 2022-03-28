@@ -19,7 +19,7 @@ class UserService(Service):
     creation/updation/deletion.
 
     Attributes:
-        postgres_unit_of_work (SQLAlchemyUnitOfWork): Helps communicating with
+        unit_of_work (SQLAlchemyUnitOfWork): Helps communicating with
         the postgres database.
         validator (UserValidator): Helps to validate user data.
     """

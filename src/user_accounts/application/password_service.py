@@ -23,7 +23,7 @@ class PasswordService(Service):
     Holds business usecase/logic which are related to password creation/updation.
 
     Attributes:
-        postgres_unit_of_work (SQLAlchemyUnitOfWork): Helps communicating with
+        unit_of_work (SQLAlchemyUnitOfWork): Helps communicating with
         the postgres database.
     """
     @inject

@@ -3,24 +3,23 @@ This module holds the class which defines password entity.
 """
 import logging
 import bcrypt
-from xml.dom.minidom import Entity
 from random import randint
 
 from user_accounts.config import Config
+from user_accounts.domain.value_object._value_object import ValueObject
 from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
 
 
 logger = logging.getLogger(__name__)
 
 
-class Password(Entity):
+class Password(ValueObject):
     """
-    Password is an entity.
+    Password is a value object.
 
     Attributes:
         password_str (str): password string
         password_hash (str): Hash of the user's password
-        salt (str): Some random string
     """
     def __init__(self, password: str):
         """

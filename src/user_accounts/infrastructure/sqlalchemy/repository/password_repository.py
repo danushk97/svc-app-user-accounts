@@ -4,13 +4,13 @@ This modle holds the repository class for Password.
 
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import and_
+from apputils.error_handler import ErrorHandler
 
 from user_accounts.infrastructure._repository.password_repository import AbstractPasswordRepository
 from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
 from user_accounts.infrastructure.sqlalchemy.models.user import UserModel
 from user_accounts.common.constants import Constants
 from user_accounts.common.exception import RepositoryException
-from apputils.error_handler import ErrorHandler
 
 
 class PasswordRepository(AbstractPasswordRepository):

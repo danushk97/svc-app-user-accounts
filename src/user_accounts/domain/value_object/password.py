@@ -1,6 +1,7 @@
 """
 This module holds the class which defines password entity.
 """
+
 import logging
 import bcrypt
 from random import randint

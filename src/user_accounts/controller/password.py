@@ -3,9 +3,9 @@ This module holds the routes which helps to update user password.
 """
 
 from flask import Blueprint, request
-from user_accounts.schema.password import UpdatePasswordRequestSchema
 from apputils.http_verb import HttpVerb
 
+from user_accounts.schema.password import UpdatePasswordRequestSchema
 from user_accounts.application.password_service import PasswordService
 from user_accounts.common.constants import Constants
 

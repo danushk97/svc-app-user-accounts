@@ -3,9 +3,9 @@ This module holds the routes which helps to valdiate credential.
 """
 
 from flask import Blueprint, request, make_response
-from user_accounts.schema.auth import LoginRequestSchema
 from apputils.http_verb import HttpVerb
 
+from user_accounts.schema.auth import LoginRequestSchema
 from user_accounts.application.password_service import PasswordService
 from user_accounts.common.constants import Constants
 

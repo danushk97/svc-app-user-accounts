@@ -4,7 +4,6 @@ account detail.
 """
 
 from flask import Blueprint, request
-from injector import inject
 from apputils.http_verb import HttpVerb
 
 from user_accounts.schema.user import CreateUserRequestSchema, CreateUserResponseSchema
@@ -14,7 +13,6 @@ from user_accounts.application.user_service import UserService
 user_app = Blueprint('user', __name__, url_prefix='/user')
 
 
-@inject
 @user_app.route('', methods=[HttpVerb.POST])
 def create_user(user_service: UserService):
     """

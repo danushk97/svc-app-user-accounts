@@ -1,3 +1,7 @@
+"""
+This module holds request/response schemas for auth related endpoints.
+"""
+
 from marshmallow import Schema, fields, validate
 
 from user_accounts.common.error_codes.invalid_user_error_codes import AppErrorCodes

@@ -27,3 +27,4 @@ Werkzeug==1.0.1
 pytest-cov
 # apputils==0.0.2
 pyjwt
+marshmallow==3.15.0

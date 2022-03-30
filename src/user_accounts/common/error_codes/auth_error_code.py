@@ -9,4 +9,4 @@ class AuthErrorCodes(ErrorCodes):
     """
     Holds the error codes related to invalid credential.
     """
-    INVALID_CREDENTIALS = (6000, 'Invalid credentials')
+    INVALID_CREDENTIALS = 'Invalid email or password'

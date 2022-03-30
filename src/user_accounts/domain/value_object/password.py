@@ -29,29 +29,10 @@ class Password(ValueObject):
         hashing_itertation = randint(
             int(Config.MINIMUM_HASH_ITERATION), int(Config.MAXIMUM_HASH_ITERATION)
         )
-        self.password_str = password
         self.hash = bcrypt.hashpw(
             password.encode('utf-8'),
             bcrypt.gensalt(rounds=hashing_itertation)
         )
-
-    @property
-    def password_str(self) -> str:
-        return self._password_str
-
-    @password_str.setter
-    def password_str(self, password: str) -> None:
-        if not isinstance(password, str):
-            raise ValueError('password value must be string')
-
-        self._password_str = password
-
-    def is_valid(self) -> bool:
-        """
-        Validates whether the self.password_str is instance of str and
-        length of self.password_str is between 8 and 40.
-        """
-        return isinstance(self.password_str, str) and 7 < len(self.password_str) < 41
 
     def get_password_model(self):
         return PasswordModel(hash=self.hash)

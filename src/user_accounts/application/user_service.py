@@ -24,8 +24,7 @@ class UserService(Service):
         validator (UserValidator): Helps to validate user data.
     """
     @inject
-    def __init__(self, unit_of_work: SQLAlchemyUnitOfWork,
-                 validator: UserValidator):
+    def __init__(self, unit_of_work: SQLAlchemyUnitOfWork, validator: UserValidator):
         """
         Instantiates the class.
         """
@@ -44,7 +43,6 @@ class UserService(Service):
             user_id: Generated id of the user.
         """
         user = self._get_user_object(user_info)
-        self.validator.validate_user(user)
         user_id = self.initiate_db_transaction(self._create_user, user)
 
         return {

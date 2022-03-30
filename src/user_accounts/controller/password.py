@@ -3,6 +3,7 @@ This module holds the routes which helps to update user password.
 """
 
 from flask import Blueprint, request
+from user_accounts.schema.password import UpdatePasswordRequestSchema
 from apputils.http_verb import HttpVerb
 
 from user_accounts.application.password_service import PasswordService
@@ -14,10 +15,11 @@ password_app = Blueprint('password', __name__, url_prefix='/password')
 
 @password_app.route('', methods=[HttpVerb.PUT])
 def update_password(password_service: PasswordService):
-    request_json = request.json or {}
-    user_id = str(request_json.get(Constants.USER_ID, '')).strip()
-    password = str(request_json.get(Constants.PASSWORD, '')).strip()
-    password_service.update_password(user_id, password)
+    update_password_data = UpdatePasswordRequestSchema().load(request.json or {})
+    password_service.update_password(
+        update_password_data[Constants.USER_ID],
+        update_password_data[Constants.PASSWORD]
+    )
 
     return {
         'message': 'Password updated successfully'

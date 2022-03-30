@@ -43,13 +43,16 @@ class FakePasswordRepository(FakePostgresRepository):
     def update_password_by_user_id(self, user_id, password):
         return 1
 
-    def get_password_hash_by_email(self, user_id):
+    def get_password_hash_by_email(self, email):
         minimum_hash_iteration = os.environ.get('MINIMUM_HASH_ITERATION')
         maximum_hash_iteration = os.environ.get('MAXIMUM_HASH_ITERATION')
         hashing_itertation = randint(int(minimum_hash_iteration),
                                      int(maximum_hash_iteration))
         salt = bcrypt.gensalt(rounds=hashing_itertation)
-        return user_id, bcrypt.hashpw('password'.encode('utf-8'), salt).decode('utf-8')
+        return {
+            'user_id': 'test_user_id',
+            'hash': bcrypt.hashpw('password'.encode('utf-8'), salt)
+        }
 
 
 class FakePasswordRepositoryReturnsZero(FakePostgresRepository):

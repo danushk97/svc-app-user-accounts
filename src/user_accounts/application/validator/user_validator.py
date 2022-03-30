@@ -50,18 +50,3 @@ class UserValidator:
 
         if error_codes:
             raise InvalidUserException(error_codes=error_codes)
-
-    def validate_user(self, user: User) -> None:
-        """
-        Validates whether the user object is valid.
-
-        Args:
-            user (User): Object that needs to be validated.
-
-        Raises:
-            InvalidUserException: if the user is invalid
-        """
-        if not user.is_valid():
-            error_codes = self.error_code_generator\
-                              .generate_invalid_user_error_codes(user)
-            raise InvalidUserException(error_codes=error_codes)

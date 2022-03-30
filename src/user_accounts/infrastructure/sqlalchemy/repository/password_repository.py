@@ -71,6 +71,7 @@ class PasswordRepository(AbstractPasswordRepository):
                        .one_or_none()
 
         if password:
-            password_hash = password.hash
-
-            return password.user_id, password_hash
+            return {
+                Constants.USER_ID: password.user_id,
+                Constants.HASH: password.hash
+            }

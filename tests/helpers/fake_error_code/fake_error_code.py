@@ -1,3 +1,3 @@
 class FakeErrorCode:
-    REPO_ERROR = (0, 'repo error')
-    ERROR = (1, 'error')
+    REPO_ERROR = 'repo error'
+    ERROR = 'error'

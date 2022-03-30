@@ -7,6 +7,7 @@ from flask import Blueprint, request
 from injector import inject
 from apputils.http_verb import HttpVerb
 
+from user_accounts.schema.user import CreateUserRequestSchema, CreateUserResponseSchema
 from user_accounts.application.user_service import UserService
 
 
@@ -26,7 +27,7 @@ def create_user(user_service: UserService):
         user_id_info (dict):
             user_id (str): The id of the created user.
     """
-    user_info = request.json or {}
-    user_id_info = user_service.create_user(user_info)
+    user_data = CreateUserRequestSchema().load(request.json or {})
+    user = user_service.create_user(user_data)
 
-    return user_id_info
+    return CreateUserResponseSchema().dump(user)

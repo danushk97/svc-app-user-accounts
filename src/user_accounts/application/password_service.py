@@ -4,6 +4,7 @@ This moudule acts as the service layer which helps to update user password.
 
 import jwt
 from injector import inject
+from user_accounts.infrastructure.sqlalchemy.models import password
 from apputils.error_handler import ErrorHandler
 from apputils.status_code import StatusCode
 
@@ -11,10 +12,8 @@ from user_accounts.infrastructure.sqlalchemy.unit_of_work import SQLAlchemyUnitO
 from user_accounts.application._service import Service
 from user_accounts.common.constants import Constants
 from user_accounts.common.exception import InvalidCredetialException, PasswordServiceException
-from user_accounts.common.exception import InvalidRequestException
-from user_accounts.common.exception import InvalidPasswordException
 from user_accounts.common.exception import RepositoryException
-from user_accounts.common.error_codes.invalid_user_error_codes import InvalidUserErrorCodes
+from user_accounts.common.error_codes.invalid_user_error_codes import AppErrorCodes
 from user_accounts.domain.value_object.password import Password
 
 
@@ -41,38 +40,32 @@ class PasswordService(Service):
         Args:
             update_info (dict): Should hold the password and user_id.
         """
-        self._check_user_id(user_id)
         password = self._get_password_object(password)
-
-        if not password.is_valid():
-            raise InvalidPasswordException([
-                InvalidUserErrorCodes.INVALID_PASSWORD_LENGTH
-            ])
 
         self.initiate_db_transaction(
             self._update_password, user_id, password.hash
         )
 
     @ErrorHandler.handle_exception([RepositoryException], PasswordServiceException)
-    def validate_credential(self, email: str, password: str) -> None:
+    def validate_credential(self, login_data: dict) -> None:
         """
         Validates credential and returns a JWT if the credential is valid.
 
         Args:
-            email (str): User email id.
-            password (str): Password.
+            login_data (dict):
+                email (str): User email id.
+                password (str): Password.
 
         Returns:
             jwt_token ()
         """
-        self._check_email(email)
-        user_id, credential = self.initiate_db_transaction(self._get_password_hash, email)
+        password = self.initiate_db_transaction(self._get_password_hash, login_data[Constants.EMAIL])
 
-        if not Password.do_match(password.encode(), credential):
+        if not Password.do_match(login_data[Constants.PASSWORD].encode(), password[Constants.HASH]):
             raise InvalidCredetialException()
 
         # TODO: Need to move secret to env_var and to update the payload
-        jwt_token = jwt.encode({Constants.USER_ID: user_id}, 'secret')
+        jwt_token = jwt.encode({Constants.USER_ID: password[Constants.USER_ID]}, 'secret')
 
         return jwt_token
 
@@ -92,14 +85,14 @@ class PasswordService(Service):
             PasswordServiceException: On no data found.
         """
         repository = unit_of_work.password_repository()
-        user_password = repository.get_password_hash_by_email(email)
+        password = repository.get_password_hash_by_email(email)
 
-        if not user_password:
+        if not password:
             raise PasswordServiceException([
-                InvalidUserErrorCodes.NO_USER_FOUND
+                AppErrorCodes.NO_USER_FOUND
             ], StatusCode.BAD_REQUEST)
 
-        return user_password[0], user_password[1]
+        return password
 
 
     def _update_password(self, unit_of_work: SQLAlchemyUnitOfWork, user_id: str, password_hash: str):
@@ -120,22 +113,10 @@ class PasswordService(Service):
 
         if not affected_rows:
             raise PasswordServiceException([
-                InvalidUserErrorCodes.NO_USER_FOUND
+                AppErrorCodes.NO_USER_FOUND
             ], StatusCode.BAD_REQUEST)
 
         unit_of_work.commit()
 
     def _get_password_object(self, password: str) -> Password:
         return Password(password)
-
-    def _check_email(self, email: str):
-        if not email:
-            raise InvalidRequestException([
-                InvalidUserErrorCodes.INVALID_EMAIL
-            ])
-
-    def _check_user_id(self, user_id: str):
-        if not user_id:
-            raise InvalidRequestException([
-                InvalidUserErrorCodes.INVALID_USER_ID
-            ])

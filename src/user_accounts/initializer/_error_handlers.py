@@ -20,6 +20,6 @@ def register_error_handlers(app) -> None:
     """
     app.register_error_handler(AppException, error_handler.app_error_handler)
     app.register_error_handler(Exception, error_handler.generic_error_handler)
-    app.register_error_handler(ValidationError, error_handler.validation_error)
+    app.register_error_handler(ValidationError, error_handler.validation_error_handler)
     app.register_error_handler(404, error_handler.page_not_found_handler)
     app.register_error_handler(405, error_handler.method_not_allowed_handler)

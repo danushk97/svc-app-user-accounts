@@ -23,18 +23,11 @@ class User(Entity):
         """
         self.stable_id = kwargs.get(Constants.STABLE_ID)
         self.attr = kwargs.get(Constants.ATTR, {})
-        self.password = Password(kwargs.get(Constants.PASSWORD, ''))
+        self.password = kwargs.get(Constants.PASSWORD)
 
-    @property
-    def password(self) -> Password:
-        return self.__password
-
-    @password.setter
-    def password(self, password: Password) -> None:
-        if not isinstance(password, Password):
-            raise ValueError('password must be instance of password')
-
-        self.__password = password
+    def validate_for_create(self) -> None:
+        if not isinstance(self.password, Password):
+            raise ValueError('password must be instance of Password')
 
     def get_user_model(self) -> UserModel:
         """

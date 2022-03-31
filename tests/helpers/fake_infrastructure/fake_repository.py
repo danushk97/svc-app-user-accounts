@@ -1,12 +1,18 @@
 import os
 import bcrypt
 from random import randint
+
+from user_accounts.domain.value_object.password import Password
+
+from user_accounts.infrastructure.sqlalchemy.models import password
+
+from user_accounts.domain.entity.user import User
 from tests.helpers.fake_error_code.fake_error_code import FakeErrorCode
 
 from user_accounts.common.exception import RepositoryException
 
 
-class FakePostgresRepository:
+class FakeSQLAlchemyRepository:
     def __init__(self, session):
         self.session = session
 
@@ -16,48 +22,43 @@ class FakePostgresRepository:
         return entity
 
 
-class FakeUserRepositoryReturnsEmptyList(FakePostgresRepository):
+class FakeUserRepositoryReturnsEmptyList(FakeSQLAlchemyRepository):
     def get_user_by_attr_field(self, field, value):
         return []
 
 
-class FakeUserRepositoryRasisesRepoException(FakePostgresRepository):
+class FakeUserRepositoryRasisesRepoException(FakeSQLAlchemyRepository):
     def get_user_by_attr_field(self, field, value):
         raise RepositoryException([FakeErrorCode.REPO_ERROR])
 
 
-class FakePasswordRepositoryRasisesRepoException(FakePostgresRepository):
+class FakePasswordRepositoryRasisesRepoException(FakeSQLAlchemyRepository):
     def update_password_by_user_id(self, user_id, password):
         raise RepositoryException([FakeErrorCode.REPO_ERROR])
 
-    def get_password_hash_by_email(self, user_id):
-        raise RepositoryException([FakeErrorCode.REPO_ERROR])
 
-
-class FakeUserRepository(FakePostgresRepository):
-    def get_user_by_attr_field(self, field, value):
+class FakeUserRepository(FakeSQLAlchemyRepository):
+    def get_all_user_by_attr_field(self, field, value):
         return [{'user_id': 'user_id'}]
 
+    def get_user_by_attr_field(self, field, value):
+        minimum_hash_iteration = os.environ.get('MINIMUM_HASH_ITERATION')
+        maximum_hash_iteration = os.environ.get('MAXIMUM_HASH_ITERATION')
+        hashing_itertation = randint(int(minimum_hash_iteration), int(maximum_hash_iteration))
+        salt = bcrypt.gensalt(rounds=hashing_itertation)
 
-class FakePasswordRepository(FakePostgresRepository):
+        return User(
+            stable_id='test_user_id',
+            attr={},
+            password=Password(bcrypt.hashpw('password'.encode('utf-8'), salt))
+        )
+
+
+class FakePasswordRepository(FakeSQLAlchemyRepository):
     def update_password_by_user_id(self, user_id, password):
         return 1
 
-    def get_password_hash_by_email(self, email):
-        minimum_hash_iteration = os.environ.get('MINIMUM_HASH_ITERATION')
-        maximum_hash_iteration = os.environ.get('MAXIMUM_HASH_ITERATION')
-        hashing_itertation = randint(int(minimum_hash_iteration),
-                                     int(maximum_hash_iteration))
-        salt = bcrypt.gensalt(rounds=hashing_itertation)
-        return {
-            'user_id': 'test_user_id',
-            'hash': bcrypt.hashpw('password'.encode('utf-8'), salt)
-        }
 
-
-class FakePasswordRepositoryReturnsZero(FakePostgresRepository):
+class FakePasswordRepositoryReturnsZero(FakeSQLAlchemyRepository):
     def update_password_by_user_id(self, user_id, password):
         return 0
-
-    def get_password_hash_by_email(self, user_id):
-        return None

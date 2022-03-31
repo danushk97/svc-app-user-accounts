@@ -10,7 +10,7 @@ from user_accounts.application.password_service import PasswordService
 from user_accounts.common.constants import Constants
 
 
-password_app = Blueprint('password', __name__, url_prefix='/password')
+password_app = Blueprint('password', __name__, url_prefix='/user/password')
 
 
 @password_app.route('', methods=[HttpVerb.PUT])

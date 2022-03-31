@@ -3,6 +3,7 @@ This module holds the routes which helps to valdiate credential.
 """
 
 from flask import Blueprint, request, make_response
+from user_accounts.application.auth_service import AuthService
 from apputils.http_verb import HttpVerb
 
 from user_accounts.schema.auth import LoginRequestSchema
@@ -14,12 +15,9 @@ auth_app = Blueprint('auth', __name__, url_prefix='/login')
 
 
 @auth_app.route('', methods=[HttpVerb.POST])
-def login(password_service: PasswordService):
-    auth_data = LoginRequestSchema().load(request.json or {})
-    jwt_token = password_service.validate_credential(
-        auth_data[Constants.EMAIL],
-        auth_data[Constants.PASSWORD]
-    )
+def login(auth_service: AuthService):
+    login_data = LoginRequestSchema().load(request.json or {})
+    jwt_token = auth_service.login(login_data)
     response = make_response({
         'message': 'Login request was successful.'
     })

@@ -24,14 +24,3 @@ def test_get_user_given_valid_data_returns_affected_row(password_repo):
 def test_add_rasies_postgres_repo_exception_on_sql_error(password_repo_raise_sql_error):
     with pytest.raises(RepositoryException):
         password_repo_raise_sql_error.update_password_by_user_id('key', 'value')
-
-
-def test_get_password_hash_given_valid_data_returns_password_hash(password_repo):
-    password = password_repo.get_password_hash_by_email('key')
-    assert password['user_id'] == 'user_id'
-    assert password['hash'] == 'password_hash'
-
-
-def test_get_password_hash_rasies_postgres_repo_exception_on_sql_error(password_repo_raise_sql_error):
-    with pytest.raises(RepositoryException):
-        password_repo_raise_sql_error.get_password_hash_by_email('user_id')

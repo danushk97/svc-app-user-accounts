@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import and_
 from apputils.error_handler import ErrorHandler
 
+from user_accounts.domain.value_object.password import Password
 from user_accounts.infrastructure._repository.password_repository import AbstractPasswordRepository
 from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
 from user_accounts.infrastructure.sqlalchemy.models.user import UserModel
@@ -49,29 +50,3 @@ class PasswordRepository(AbstractPasswordRepository):
             .update({Constants.HASH: password_hash})
 
         return row_affected
-
-    @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
-    def get_password_hash_by_email(self, email: str) -> tuple:
-        """
-        Fetches password hash for the user_id.
-
-        Args:
-            email (str): User email id.
-
-        Returns:
-            user_id (str): User id, password_hash (str): Password Hash.
-
-        Raises:
-            RepositoryException: On SQLAlachemyError
-        """
-        password = self._session\
-                       .query(PasswordModel)\
-                       .join(UserModel, and_(PasswordModel.user_id == UserModel.stable_id))\
-                       .filter(UserModel.attr[Constants.EMAIL].astext == email)\
-                       .one_or_none()
-
-        if password:
-            return {
-                Constants.USER_ID: password.user_id,
-                Constants.HASH: password.hash
-            }

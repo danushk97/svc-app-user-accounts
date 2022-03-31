@@ -1,5 +1,6 @@
 import jwt
 
+
 def test_login_given_valid_input_then_returns_data_with_status_code_200(client, monkeypatch):
     response = client.post('/login', json={
         'email': 'test@test.com',

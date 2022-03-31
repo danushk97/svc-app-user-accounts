@@ -24,6 +24,10 @@ class PasswordServiceException(AppException):
     pass
 
 
+class NoUserFoundException(AppException):
+    pass
+
+
 class InvalidRequestException(AppException):
     pass
 

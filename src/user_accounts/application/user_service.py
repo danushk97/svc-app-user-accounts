@@ -11,6 +11,9 @@ from user_accounts.common import exception
 from user_accounts.domain.entity.user import User
 from user_accounts.application.validator.user_validator import UserValidator
 from user_accounts.application._service import Service
+from user_accounts.domain.value_object.password import Password
+from user_accounts.application.preprocessor.data_preprocessor import DataPreprocessor
+from user_accounts.common.constants import Constants
 
 
 class UserService(Service):
@@ -43,6 +46,7 @@ class UserService(Service):
             user_id: Generated id of the user.
         """
         user = self._get_user_object(user_info)
+        user.validate_for_create()
         user_id = self.initiate_db_transaction(self._create_user, user)
 
         return {
@@ -67,4 +71,6 @@ class UserService(Service):
         Returns:
             User
         """
+
+        props[Constants.PASSWORD] = Password(props.pop(Constants.PASSWORD))
         return User(**props)

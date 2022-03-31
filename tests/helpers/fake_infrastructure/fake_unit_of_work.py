@@ -2,8 +2,8 @@ from tests.helpers.fake_infrastructure.fake_repository import FakeUserRepository
     FakeUserRepositoryReturnsEmptyList, FakeUserRepositoryRasisesRepoException,\
     FakePasswordRepository, FakePasswordRepositoryReturnsZero, \
     FakePasswordRepositoryRasisesRepoException
-from tests.helpers.fake_infrastructure.fake_sqlalchmey_session import \
-    FakeSQLAlchemySession
+from tests.helpers.fake_infrastructure.fake_sqlalchmey_session import FakeSQLAlchemySession
+
 
 class FakeUnitOfWork:
     def __init__(self, session=FakeSQLAlchemySession, db_url=None):

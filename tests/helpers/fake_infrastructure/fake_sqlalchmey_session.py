@@ -30,6 +30,9 @@ class FakeSQLAlchemySession:
     def add(self, entity):
         return None
 
+    def add_all(self, entity):
+        return None
+
     def update(self, value):
         if value['hash'] == 'invalid':
             return 0

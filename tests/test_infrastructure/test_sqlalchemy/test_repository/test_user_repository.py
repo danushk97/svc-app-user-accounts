@@ -30,7 +30,7 @@ def test_add_rasies_postgres_repo_exception_on_sql_error(user_repo_raise_sql_err
 def test_get_user_by_attr_given_valid_data_returns_password_hash(user_repo):
     user = user_repo.get_user_by_attr_field('key', 'value')
     assert user.stable_id == 'user_id'
-    assert user.password.hash == 'password_hash'
+    assert user.password.hash == b'password_hash'
 
 
 def test_get_get_user_by_attr_rasies_postgres_repo_exception_on_sql_error(user_repo_raise_sql_error):

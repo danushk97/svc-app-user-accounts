@@ -6,13 +6,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import and_
 from apputils.error_handler import ErrorHandler
 
+from user_accounts.common.exception import RepositoryException
 from user_accounts.domain.value_object.password import Password
-from user_accounts.infrastructure.sqlalchemy.models import password
 from user_accounts.domain.entity.user import User
 from user_accounts.infrastructure._repository.user_repository import AbstractUserRepository
 from user_accounts.infrastructure.sqlalchemy.models.user import UserModel
 from user_accounts.infrastructure.sqlalchemy.models.password import PasswordModel
-from user_accounts.common.exception import RepositoryException
 
 
 class UserRepository(AbstractUserRepository):
@@ -56,7 +55,7 @@ class UserRepository(AbstractUserRepository):
 
     @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
     def get_user_by_attr_field(self, attr_field: str, attr_field_value: str) -> User:
-        user = self._user_by_attr_query(attr_field, attr_field_value, [UserModel, PasswordModel])\
+        user, password_hash = self._user_by_attr_query(attr_field, attr_field_value, [UserModel, PasswordModel.hash])\
             .join(PasswordModel, and_(UserModel.stable_id == PasswordModel.user_id))\
             .one_or_none()
 
@@ -64,7 +63,7 @@ class UserRepository(AbstractUserRepository):
             user = User(
                 stable_id=user.stable_id,
                 attr=user.attr,
-                password=Password(user.password.hash)
+                password=Password(password_hash)
             )
 
         return user

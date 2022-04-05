@@ -1,14 +1,9 @@
 from sqlalchemy.exc import SQLAlchemyError
 
 
-class FakePassword:
-    hash = 'password_hash'
-
-
 class FakeUser:
     stable_id = 'user_id'
     attr = {}
-    password = FakePassword
 
 
 class FakeSQLAlchemySession:
@@ -49,7 +44,7 @@ class FakeSQLAlchemySession:
         return ['data']
 
     def one_or_none(self):
-        return FakeUser
+        return FakeUser, b'password_hash'
 
     def limit(self, limit):
         return self

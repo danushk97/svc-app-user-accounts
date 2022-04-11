@@ -11,7 +11,7 @@ class InvalidUserErrorCodeGenerator:
     Validates the data which comes along with the request.
 
     Attributes:
-        error_codes (list): Holds the list of error codes.
+        (dict): Holds the field and message.
     """
     def generate_duplicate_user_error_code(self, duplicate_field: str):
         duplicate_field = str(duplicate_field).lower()

@@ -55,16 +55,19 @@ class UserRepository(AbstractUserRepository):
 
     @ErrorHandler.handle_exception([SQLAlchemyError], RepositoryException)
     def get_user_by_attr_field(self, attr_field: str, attr_field_value: str) -> User:
-        user, password_hash = self._user_by_attr_query(attr_field, attr_field_value, [UserModel, PasswordModel.hash])\
+        data = self._user_by_attr_query(attr_field, attr_field_value, [UserModel, PasswordModel.hash])\
             .join(PasswordModel, and_(UserModel.stable_id == PasswordModel.user_id))\
             .one_or_none()
 
-        if user:
-            user = User(
-                stable_id=user.stable_id,
-                attr=user.attr,
-                password=Password(password_hash)
-            )
+        if not data:
+            return
+
+        user_data, password_hash = data[0], data[1]
+        user = User(
+            stable_id=user_data.stable_id,
+            attr=user_data.attr,
+            password=Password(password_hash)
+        )
 
         return user
 

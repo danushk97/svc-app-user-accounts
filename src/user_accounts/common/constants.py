@@ -23,3 +23,5 @@ class Constants(ReadOnly):
     MAXIMUM_HASH_ITERATION = 'MAXIMUM_HASH_ITERATION'
     CREDENTIAL = 'credential'
     DB_CONNECTION_STRING = 'DB_CONNECTION_STRING'
+    FIELD = 'field'
+    MESSAGE = 'message'

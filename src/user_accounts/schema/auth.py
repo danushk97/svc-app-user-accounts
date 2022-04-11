@@ -4,14 +4,14 @@ This module holds request/response schemas for auth related endpoints.
 
 from marshmallow import Schema, fields, validate
 
-from user_accounts.common.error_codes.invalid_user_error_codes import AppErrorCodes
+from user_accounts.common.error_message import AppErrorMessage
 from user_accounts.schema._fields import password
 
 
 class LoginRequestSchema(Schema):
     email = fields.String(
         required=True,
-        validate=validate.Email(error=AppErrorCodes.INVALID_EMAIL),
-        error_messages={'required': AppErrorCodes.EMAIL_REQUIRED}
+        validate=validate.Email(error=AppErrorMessage.INVALID_EMAIL),
+        error_messages={'required': AppErrorMessage.EMAIL_REQUIRED}
     )
     password = password

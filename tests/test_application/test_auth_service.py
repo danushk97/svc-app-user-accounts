@@ -31,7 +31,7 @@ def test_login_given_valid_login_data_returns_jwt(auth_service: AuthService):
 def test_login_given_invalid_auth_raises_invalid_auth_exception(auth_service: AuthService):
     with pytest.raises(InvalidCredetialException) as excinfo:
         auth_service.login({'email': 'test@t.com', 'password': 'invalid'})
-    assert excinfo.value.error_codes == ['Invalid email or password']
+    assert excinfo.value.message == 'Invalid email or password'
 
 
 def test_login_given_valid_auth_raises_auth_service_exception_on_no_update(

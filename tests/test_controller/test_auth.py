@@ -21,7 +21,7 @@ def test_login_on_exception_from_service_layer_returns_status_code_500(client_ra
         'password': 'password'
     })
     assert response.status_code == 500
-    assert response.get_json() == {'errors': ['Internal server error']}
+    assert response.get_json() == {'error': {'code': 500, 'message': 'Internal server error'}}
 
 
 def test_login_given_invalid_email_returns_400(client):
@@ -31,6 +31,14 @@ def test_login_given_invalid_email_returns_400(client):
     })
     assert response.status_code == 400
     assert response.get_json() == {
-        'errors': ['Please provide a valid email'],
-        'message': 'Please provide a valid data.'
+        'error': {
+            'code': 400,
+            'errors': [
+                {
+                    'field': 'email',
+                    'message': 'Please provide a valid email.'
+                }
+            ],
+            'message': 'Payload contains missing or invalid data.'
+        }
     }

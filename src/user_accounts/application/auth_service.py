@@ -7,13 +7,11 @@ from injector import inject
 from apputils.error_handler import ErrorHandler
 from apputils.status_code import StatusCode
 
-from user_accounts.infrastructure.sqlalchemy.models import password
 from user_accounts.infrastructure.sqlalchemy.unit_of_work import SQLAlchemyUnitOfWork
 from user_accounts.application._service import Service
 from user_accounts.common.constants import Constants
 from user_accounts.common.exception import NoUserFoundException, InvalidCredetialException, PasswordServiceException
 from user_accounts.common.exception import RepositoryException
-from user_accounts.common.error_codes.invalid_user_error_codes import AppErrorCodes
 from user_accounts.domain.value_object.password import Password
 
 
@@ -73,8 +71,9 @@ class AuthService(Service):
         user = repository.get_user_by_attr_field(Constants.EMAIL, email)
 
         if not user:
-            raise NoUserFoundException([
-                AppErrorCodes.NO_USER_FOUND
-            ], StatusCode.BAD_REQUEST)
+            raise NoUserFoundException(
+                'The requested resource is not found.',
+                status_code=StatusCode.RESOURCE_NOT_FOUND
+            )
 
         return user

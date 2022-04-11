@@ -13,7 +13,7 @@ def test_update_password_on_exception_from_service_layer_returns_status_code_500
         'password': 'password'
     })
     assert response.status_code == 500
-    assert response.get_json() == {'errors': ['Internal server error']}
+    assert response.get_json() == {'error': {'code': 500, 'message': 'Internal server error'}}
 
 
 def test_update_password_given_invalid_user_id_returns_400(client):
@@ -23,8 +23,16 @@ def test_update_password_given_invalid_user_id_returns_400(client):
     })
     assert response.status_code == 400
     assert response.get_json() == {
-        'errors': ['Please provide a valid user_id'],
-        'message': 'Please provide a valid data.'
+        'error': {
+            'code': 400,
+            'errors': [
+                {
+                    'field': 'user_id',
+                    'message': 'Please provide a valid user_id.'
+                }
+            ],
+            'message': 'Payload contains missing or invalid data.'
+        }
     }
 
 
@@ -35,6 +43,14 @@ def test_update_password_given_invalid_password_raises_invalid_password_exceptio
     })
     assert response.status_code == 400
     assert response.get_json() == {
-        'errors': ['password length must be between 8 and 40'],
-        'message': 'Please provide a valid data.'
+        'error': {
+            'code': 400,
+            'errors': [
+                {
+                    'field': 'password',
+                    'message': 'password length must be between 8 and 40.'
+                }
+            ],
+            'message': 'Payload contains missing or invalid data.'
+        }
     }

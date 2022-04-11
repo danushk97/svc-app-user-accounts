@@ -10,7 +10,6 @@ from user_accounts.infrastructure.sqlalchemy.unit_of_work import SQLAlchemyUnitO
 from user_accounts.application._service import Service
 from user_accounts.common.exception import PasswordServiceException
 from user_accounts.common.exception import RepositoryException
-from user_accounts.common.error_codes.invalid_user_error_codes import AppErrorCodes
 from user_accounts.domain.value_object.password import Password
 
 
@@ -60,9 +59,10 @@ class PasswordService(Service):
         affected_rows = repository.update_password_by_user_id(user_id, password_hash)
 
         if not affected_rows:
-            raise PasswordServiceException([
-                AppErrorCodes.NO_USER_FOUND
-            ], StatusCode.BAD_REQUEST)
+            raise PasswordServiceException(
+                'No record found to update.',
+                status_code=StatusCode.BAD_REQUEST
+            )
 
         unit_of_work.commit()
 

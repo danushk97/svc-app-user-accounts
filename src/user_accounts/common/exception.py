@@ -5,7 +5,7 @@ This module holds the exception classes.
 from apputils.exception import AppException
 from apputils.status_code import StatusCode
 
-from user_accounts.common.error_codes.auth_error_code import AuthErrorCodes
+from user_accounts.common.error_message import AppErrorMessage
 
 
 class InvalidPayloadException(AppException):
@@ -36,19 +36,24 @@ class InvalidPasswordException(AppException):
     pass
 
 
-class InvalidUserException(AppException):
-    def __init__(self, error_codes:list=None,
-                 status_code:int=StatusCode.BAD_REQUEST) -> None:
+class DuplicateEntryException(AppException):
+    def __init__(self, errors) -> None:
         """
         Intansiates the class.
         """
-        super().__init__(error_codes=error_codes, status_code=status_code)
+        super().__init__(
+            message='The data provided is not unique.',
+            errors=errors,
+            status_code=StatusCode.BAD_REQUEST
+        )
 
 
 class InvalidCredetialException(AppException):
-    def __init__(self, error_codes: list=[AuthErrorCodes.INVALID_CREDENTIALS],
-                 status_code: int=StatusCode.UNAUTHORIZED) -> None:
+    def __init__(self) -> None:
         """
         Intansiates the class.
         """
-        super().__init__(error_codes=error_codes, status_code=status_code)
+        super().__init__(
+            message=AppErrorMessage.INVALID_CREDENTIALS,
+            status_code=StatusCode.UNAUTHORIZED
+        )

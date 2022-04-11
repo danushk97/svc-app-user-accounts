@@ -5,14 +5,14 @@ This module holds the masrshmallow field configs.
 
 from marshmallow import fields, validate
 
-from user_accounts.common.error_codes.invalid_user_error_codes import AppErrorCodes
+from user_accounts.common.error_message import AppErrorMessage
 
 
 password = fields.String(
     required=True,
-    validate=validate.Length(min=8, max=40, error=AppErrorCodes.INVALID_PASSWORD_LENGTH),
+    validate=validate.Length(min=8, max=40, error=AppErrorMessage.INVALID_PASSWORD_LENGTH),
     error_messages={
-        'required': AppErrorCodes.PASSWORD_REQUIRED,
-        'invalid': AppErrorCodes.INVALID_PASSWORD
+        'required': AppErrorMessage.PASSWORD_REQUIRED,
+        'invalid': AppErrorMessage.INVALID_PASSWORD
     }
 )

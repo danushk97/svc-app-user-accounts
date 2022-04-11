@@ -31,7 +31,7 @@ def password_service_raises_exception():
 def test_update_password_given_valid_password_raises_password_service_exception_on_no_update(password_service_empty_repo):
     with pytest.raises(PasswordServiceException) as excinfo:
         password_service_empty_repo.update_password('is', 'password')
-    assert excinfo.value.error_codes == ['User not registered']
+    assert excinfo.value.message == 'No record found to update.'
 
 
 def test_update_password_given_valid_password_raises_password_service_exception_on_repo_error(password_service_raises_exception):

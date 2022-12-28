@@ -33,6 +33,8 @@ users = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("stable_id", UUID, nullable=False, unique=True, server_default=str(uuid4())),
     Column("attr", JSON, nullable=False),
+    Column("isemail_verified", BOOLEAN, nullable=False, server_default='false'),
+    Column("isphone_number_verified", BOOLEAN, nullable=False, server_default='false'),
     Column("active_flag", BOOLEAN, nullable=False, server_default='true'),
     Column("created_by", UUID),
     Column("created_at", DateTime, nullable=False, server_default=func.now()),

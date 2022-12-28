@@ -1,12 +1,17 @@
 """
 This module holds the unit of work class for sqlalchemy.
 """
-from useraccounts.config import Config
 
-from useraccounts.infrastructure._unit_of_work import AbstractUnitOfWork
-from useraccounts.infrastructure.sqlalchemy.repository.user_repository import UserRepository
-from useraccounts.infrastructure.sqlalchemy.repository.password_repository import PasswordRepository
-from useraccounts.infrastructure.sqlalchemy.session import SQLAlchemySessionFactory
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session, Session
+
+from useraccounts.config import Config
+from useraccounts.adapters.sqlalchemy.repository import UsersRepository
+from useraccounts.application.interfaces.unit_of_work import AbstractUnitOfWork
+
+
+engine = create_engine(Config.DB_CONNECTION_STRING)
+session = scoped_session(sessionmaker(bind=engine))
 
 
 class SQLAlchemyUnitOfWork(AbstractUnitOfWork):
@@ -17,18 +22,18 @@ class SQLAlchemyUnitOfWork(AbstractUnitOfWork):
     Attributes:
         session_factory (Session): SQLAlchemy session.
     """
-    def __init__(self, session_factory=SQLAlchemySessionFactory, db_connection_url=None):
+    def __init__(self, session_factory=session):
         """
         Instantiates the class.
         """
-        self.db_connection_url = db_connection_url or Config.DB_CONNECTION_STRING
-        self._session_factory = session_factory.get_instance(self.db_connection_url)
+        self._session_factory = session_factory
+        self._users = None
 
     def __enter__(self):
         """
         Gets executed when this instance of class is used with "with" statement.
         """
-        self._session = self._session_factory()
+        self._session: Session = self._session_factory()
 
         return self
 
@@ -65,8 +70,9 @@ class SQLAlchemyUnitOfWork(AbstractUnitOfWork):
         """
         self._session_factory.remove()
 
-    def user_repository(self) -> UserRepository:
-        return UserRepository(self._session)
-
-    def password_repository(self) -> PasswordRepository:
-        return PasswordRepository(self._session)
+    @property
+    def users(self) -> UsersRepository:
+        if not self._users:
+            self._users = UsersRepository(self._session)
+        
+        return self._users

@@ -2,41 +2,33 @@
 This module holds request/response schemas for user related endpoints.
 """
 
-from marshmallow import Schema, fields, validate, post_load
+from typing import Optional
+from pydantic import BaseModel, EmailStr, validator, Field
 
-from useraccounts.common.constants import Constants
-from useraccounts.common.error_message import AppErrorMessage
-from useraccounts.schema._post_load_processor import hash_password
-from useraccounts.schema._fields import password
+from useraccounts.schema.post_load_processor import hash_password
 
 
-class UserAttrSchema(Schema):
-    email = fields.String(
-        required=True,
-        validate=validate.Email(error=AppErrorMessage.INVALID_EMAIL),
-        error_messages={'required': AppErrorMessage.EMAIL_REQUIRED}
-    )
-    display_name = fields.String(
-        required=True,
-        validate=validate.Length(min=1, error=AppErrorMessage.INVALID_DISPLAY_NAME),
-        error_messages={'required': AppErrorMessage.DISPLAY_NAME_REQUIRED}
-    )
+class UserAttrSchema(BaseModel):
+    email: EmailStr
+    phone_number: Optional[int]
+    first_name: str = Field(min_length=1)
+    last_name: str = Field(min_length=1)
+    display_name: str = Field(min_length=5)
 
+    @validator("phone_number")
+    def phone_number_validator(cls, phone_number: str):
+        assert len(phone_number) == 10, 'The phone_number must contain 10 digits'
+        
+        return phone_number
 
-class CreateUserRequestSchema(Schema):
-    attr = fields.Nested(
-        UserAttrSchema,
-        required=True,
-        error_messages={'required': AppErrorMessage.ATTR_REQUIRED}
-    )
-    password = password
+class CreateUserRequestSchema(BaseModel):
+    attr:  UserAttrSchema
+    password: str = Field(min_length=1)
 
-    @post_load
-    def post_load_process(self, data, **kwargs):
-        data[Constants.PASSWORD] = hash_password(data[Constants.PASSWORD])
+    @validator("password")
+    def password_validator(cls, password: str):
+        return hash_password(password)
+    
 
-        return data
-
-
-class CreateUserResponseSchema(Schema):
-    user_id = fields.String(required=True)
+class UserIdSchema(BaseModel):
+    user_id: str

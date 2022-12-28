@@ -2,7 +2,7 @@
 
 from os import environ
 
-from useraccounts.common.constants import Constants
+from useraccounts.constants import Constants
 
 
 class Config:

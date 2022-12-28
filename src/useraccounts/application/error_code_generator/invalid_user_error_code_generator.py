@@ -2,15 +2,14 @@
 This module holds the class which is responsible to validate request data.
 """
 
-from useraccounts.common.constants import Constants
-from useraccounts.common.error_message import AppErrorMessage
+from src.useraccounts.constants import Constants, AppErrorMessage
 
 
 class InvalidUserErrorCodeGenerator:
     """
     Validates the data which comes along with the request.
     """
-    def generate_duplicate_user_error_code(self, duplicate_field: str):
+    def generate_duplicate_entry_error_code(duplicate_field: str):
         """
         Returns a dict containing error info.
 

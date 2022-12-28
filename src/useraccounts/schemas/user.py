@@ -5,14 +5,13 @@ This module holds request/response schemas for user related endpoints.
 from typing import Optional
 from pydantic import BaseModel, EmailStr, validator, Field
 
-from useraccounts.schema.post_load_processor import hash_password
+from useraccounts.schemas.post_load_processor import hash_password
 
 
 class UserAttrSchema(BaseModel):
     email: EmailStr
     phone_number: Optional[int]
-    first_name: str = Field(min_length=1)
-    last_name: str = Field(min_length=1)
+    full_name: str = Field(min_length=1)
     display_name: str = Field(min_length=5)
 
     @validator("phone_number")

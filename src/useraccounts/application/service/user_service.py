@@ -8,7 +8,7 @@ from uuid import uuid4
 from useraccounts.application.validator.user_validator import UserValidator
 from useraccounts.application.interfaces.unit_of_work import AbstractUnitOfWork
 from useraccounts.domain.models import User, Password
-from useraccounts.schema.user import UserIdSchema
+from useraccounts.schemas.user import UserIdSchema
 from useraccounts.constants import Constants
 
 

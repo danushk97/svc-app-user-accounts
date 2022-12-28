@@ -8,7 +8,7 @@ from pydantic_webargs import webargs
 from common.http import send_success_response
 from common.http.middleware import error_filter 
 
-from useraccounts.schema.user import CreateUserRequestSchema
+from useraccounts.schemas.user import CreateUserRequestSchema
 from useraccounts.application.service import UserService
 from useraccounts.bootstrap import bootstrap
 

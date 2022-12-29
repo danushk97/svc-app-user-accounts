@@ -7,7 +7,6 @@ from uuid import uuid4
 import bcrypt
 import logging
 
-from useraccounts.domain import models
 from useraccounts.domain.models.base_model import BaseModel
 
 
@@ -19,7 +18,6 @@ class Password(BaseModel):
     Password is a value object.
 
     Attributes:
-        user_id (int): User ID.
         password_hash (str): Encrypted form of password_str.
     """
     def __init__(

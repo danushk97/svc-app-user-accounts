@@ -1,8 +1,8 @@
-from useraccounts.application.interfaces.accounts_repository import AbstractAccountsRepository
-from useraccounts.domain.models import Account
-
 from sqlalchemy.orm.query import Query
 from sqlalchemy.orm.session import Session
+
+from useraccounts.application.interfaces.accounts_repository import AbstractAccountsRepository
+from useraccounts.domain.models import Account
 
 
 class AccountsRepository(AbstractAccountsRepository):

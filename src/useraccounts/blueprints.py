@@ -3,7 +3,7 @@ This module holds the BLUEPRINTS.
 """
 
 BLUEPRINTS = [
-    ('useraccounts.controller.user', 'user_app')
+    ('useraccounts.controller.accounts', 'accounts_app')
     # ('user_accounts.controller.auth', 'auth_app'),
     # ('user_accounts.controller.password', 'password_app')
 ]

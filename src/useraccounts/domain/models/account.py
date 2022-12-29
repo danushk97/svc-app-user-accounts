@@ -5,8 +5,11 @@ from useraccounts.domain.models.password import Password
 from useraccounts.domain.models.base_model import BaseModel
 
 
-class User(BaseModel):
-    def __init__(self,
+class Account(BaseModel):
+    def __init__(
+        self,
+        email: str,
+        username: str,
         attr: dict,
         stable_id: str = None,
         isemail_verified: bool = False,
@@ -17,16 +20,24 @@ class User(BaseModel):
         updated_at: datetime = None
     ) -> None:
         super().__init__(
-            active_flag,
             created_by,
             created_at,
             updated_by,
             updated_at
         )
         self.stable_id = stable_id or str(uuid4())
+        self.username = username
+        self.email = email
         self.attr = attr
         self.isemail_verified = isemail_verified
-        self.passwords = set()
+        self.active_flag = active_flag
+        self._password: Password = None
     
-    def set_password(self, password: bytes):
-        return self.passwords.add(password)
+    @property
+    def password(self):
+        return self._password
+    
+    @password.setter
+    def set_password(self, value: Password):
+        assert isinstance(value, Password), "value must be a instance of Password"
+        self._password = value

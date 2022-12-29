@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session, Session
 
 from useraccounts.config import Config
-from useraccounts.adapters.sqlalchemy.repository import UsersRepository
+from useraccounts.adapters.sqlalchemy.repository import AccountsRepository
 from useraccounts.application.interfaces.unit_of_work import AbstractUnitOfWork
 
 
@@ -27,7 +27,7 @@ class SQLAlchemyUnitOfWork(AbstractUnitOfWork):
         Instantiates the class.
         """
         self._session_factory = session_factory
-        self._users = None
+        self._accounts = None
 
     def __enter__(self):
         """
@@ -69,10 +69,12 @@ class SQLAlchemyUnitOfWork(AbstractUnitOfWork):
         Closes the current DB session.
         """
         self._session_factory.remove()
+        self._session = None
+        self._accounts = None
 
     @property
-    def users(self) -> UsersRepository:
-        if not self._users:
-            self._users = UsersRepository(self._session)
+    def accounts(self) -> AccountsRepository:
+        if not self._accounts:
+            self._accounts = AccountsRepository(self._session)
         
-        return self._users
+        return self._accounts

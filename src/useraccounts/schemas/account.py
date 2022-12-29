@@ -8,11 +8,9 @@ from pydantic import BaseModel, EmailStr, validator, Field
 from useraccounts.schemas.post_load_processor import hash_password
 
 
-class UserAttrSchema(BaseModel):
-    email: EmailStr
+class AccountAttrSchema(BaseModel):
     phone_number: Optional[int]
-    full_name: str = Field(min_length=1)
-    display_name: str = Field(min_length=5)
+    name: str = Field(min_length=1)
 
     @validator("phone_number")
     def phone_number_validator(cls, phone_number: str):
@@ -20,14 +18,18 @@ class UserAttrSchema(BaseModel):
         
         return phone_number
 
-class CreateUserRequestSchema(BaseModel):
-    attr:  UserAttrSchema
+
+class CreateAccountRequestSchema(BaseModel):
+    username: str = Field(min_length=4, max_length=50)
+    email: EmailStr
+    attr:  AccountAttrSchema
     password: str = Field(min_length=1)
 
     @validator("password")
     def password_validator(cls, password: str):
         return hash_password(password)
-    
 
-class UserIdSchema(BaseModel):
-    user_id: str
+
+class AccountMetaSchema(BaseModel):
+    account_id: str
+    isemail_verified: bool = False

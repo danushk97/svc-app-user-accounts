@@ -8,6 +8,8 @@ from common.readonly import ReadOnly
 
 class Constants(ReadOnly):
     #string literals
+    ACCOUNT_SERVICE = "account_service"
+    PAYLOAD = "payload"
     EMAIL = "email"
     HASH = "hash"
     DISPLAY_NAME = "display_name"
@@ -27,6 +29,7 @@ class Constants(ReadOnly):
     FIELD = "field"
     MESSAGE = "message"
     UNIT_OF_WORK = "unit_of_work"
+    USERNAME = "username"
 
 
 class AppErrorMessage(ErrorMessage):
@@ -36,8 +39,8 @@ class AppErrorMessage(ErrorMessage):
     INVALID_PASSWORD_LENGTH = "password length must be between {min} and {max}."
     INVALID_USER_ID = "Please provide a valid user_id."
     ATTR_REQUIRED = "attr is required"
-    USER_WITH_EMAIL_ID_ALREADY_EXISTS = "User with this email id already exists."
-    USER_WITH_DISPLAY_NAME_ALREADY_EXISTS = "User with this display_name already exists."
+    ACCOUNT_WITH_EMAIL_ID_ALREADY_EXISTS = "Account with this email id already exists."
+    ACCOUNT_WITH_USERNAME_ALREADY_EXISTS = "Account with this username already exists."
     NO_USER_FOUND = "User not registered"
     EMAIL_REQUIRED = "email is required."
     USER_ID_REQUIRED = "user_id is required"

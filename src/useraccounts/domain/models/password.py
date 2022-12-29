@@ -25,7 +25,6 @@ class Password(BaseModel):
     def __init__(
         self,
         password_hash: bytes,
-        active_flag: bool = True,
         created_at: datetime = None,
         created_by: str = None,
         updated_by: str = None,
@@ -35,7 +34,6 @@ class Password(BaseModel):
         Instantiates class.
         """
         super().__init__(
-            active_flag,
             created_by,
             created_at,
             updated_by,

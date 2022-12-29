@@ -1,6 +1,6 @@
-from useraccounts.application.service.user_service import UserService
+from useraccounts.application.service.account_service import AccountService
 
 
 SERVICES = {
-    "user_service": UserService
+    "account_service": AccountService
 }

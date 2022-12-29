@@ -4,11 +4,11 @@ Holds the abstract class for unit of work.
 
 from abc import ABC, abstractmethod
 
-from useraccounts.application.interfaces.users_repository import AbstractUsersRepository
+from useraccounts.application.interfaces.accounts_repository import AbstractAccountsRepository
 
 
 class AbstractUnitOfWork(ABC):
-    users: AbstractUsersRepository
+    accounts: AbstractAccountsRepository
 
     def __enter__(self):
         """
@@ -22,6 +22,10 @@ class AbstractUnitOfWork(ABC):
         Gets executed after the code within the "with" statement gets executed.
         """
         pass
+
+    @abstractmethod
+    def flush(self):
+        raise NotImplementedError
 
     @abstractmethod
     def commit(self):

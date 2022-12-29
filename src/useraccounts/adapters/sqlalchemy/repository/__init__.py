@@ -1,6 +1,6 @@
-from useraccounts.adapters.sqlalchemy.repository.users_repository import UsersRepository
+from useraccounts.adapters.sqlalchemy.repository.accounts_repository import AccountsRepository
 
 
 __all__ = [
-    "UsersRepository"
+    "AccountsRepository"
 ]

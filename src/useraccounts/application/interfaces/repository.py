@@ -1,16 +1,20 @@
 from abc import ABC, abstractmethod
+
+from sqlalchemy.orm import Session
+
 from useraccounts.domain.models.base_model import BaseModel
 
 class AbstractRepository(ABC):
-    @abstractmethod
+    _session: Session 
+    
     def add(self, entity: BaseModel):
-        raise NotImplemented
+        self._session.add(entity)
     
-    @staticmethod
+    @abstractmethod
     def get(self, id):
-        raise NotImplemented
+        raise NotImplementedError
     
-    @staticmethod
+    @abstractmethod
     def list(self):
-        raise NotImplemented
+        raise NotImplementedError
         

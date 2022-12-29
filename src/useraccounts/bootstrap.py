@@ -1,4 +1,4 @@
-from logging import getLogger
+import logging
 
 from flask import Flask
 from common import configurer
@@ -12,7 +12,7 @@ from useraccounts.constants import Constants
 from useraccounts.config import Config
 
 
-_logger = getLogger(__name__)
+_logger = logging.getLogger(__name__)
 _services = None
 
 

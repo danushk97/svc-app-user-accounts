@@ -1,7 +1,7 @@
 import logging
 
 from flask import Flask
-from common import configurer
+from appscommon import configurer
 
 from useraccounts.application.interfaces.unit_of_work import AbstractUnitOfWork
 from useraccounts.application.service import SERVICES

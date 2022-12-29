@@ -2,8 +2,8 @@
 This module holds the constants.
 """
 
-from common.exception.message import ErrorMessage
-from common.readonly import ReadOnly
+from appscommon.exception.message import ErrorMessage
+from appscommon.readonly import ReadOnly
 
 
 class Constants(ReadOnly):

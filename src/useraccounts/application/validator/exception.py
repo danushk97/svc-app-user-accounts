@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from common.exception import InvalidParamsException
+from appscommon.exception import InvalidParamsException
 
 from useraccounts.constants import AppErrorMessage
 

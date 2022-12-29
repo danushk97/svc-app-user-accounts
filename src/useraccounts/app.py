@@ -4,7 +4,7 @@ This module holds the function which retruns the instance of app.
 
 from flask  import Flask
 
-from common import logconfig
+from appscommon import logconfig
 
 from useraccounts.bootstrap import bootstrap
 

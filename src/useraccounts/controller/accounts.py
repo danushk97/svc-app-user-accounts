@@ -3,10 +3,10 @@ This module holds the routes which is related add, update and delete user
 account detail.
 """
 
-from flask import Blueprint
-from pydantic_webargs import webargs
 from appscommon.http import send_success_response
 from appscommon.http.middleware import error_filter 
+from flask import Blueprint
+from pydantic_webargs import webargs
 
 from useraccounts.schemas.account import CreateAccountRequestSchema
 from useraccounts.application.service import AccountService 

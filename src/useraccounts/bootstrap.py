@@ -1,6 +1,5 @@
-import logging
-
 from appscommon import configurer
+from appscommon.logconfig import Logging
 from flask import Flask
 
 from useraccounts.application.interfaces.unit_of_work import AbstractUnitOfWork
@@ -12,7 +11,7 @@ from useraccounts.constants import Constants
 from useraccounts.config import Config
 
 
-_logger = logging.getLogger(__name__)
+_logging = Logging(__name__)
 _services = None
 
 
@@ -25,20 +24,20 @@ def bootstrap(
     if _services:
         return _services
 
-    _logger.info('Bootstrapping....')
+    _logging.logger.info('Bootstrapping....')
     configurer.ensure_configs(Config)
     configurer.register_error_handlers(app)
 
     
-    _logger.info('Injecting dependencies....')
+    _logging.logger.info('Injecting dependencies....')
     dependencies = {
         Constants.UNIT_OF_WORK: unit_of_work
     }
     _services = configurer.inject_dependencies(SERVICES, dependencies)
     
-    _logger.info('Registering blueprints....')
+    _logging.logger.info('Registering blueprints....')
     configurer.register_blueprints(app, BLUEPRINTS)
     start_orm_mappers()
-    _logger.info('Bootstrapping was successful.')
+    _logging.logger.info('Bootstrapping was successful.')
 
     return _services

@@ -1,6 +1,6 @@
-import logging
 from uuid import uuid4
 
+from appscommon.logconfig import Logging
 from sqlalchemy import (
     Column,
     DateTime,
@@ -16,20 +16,13 @@ from sqlalchemy.orm import registry, relationship
 from useraccounts.domain import models
 
 
-logger = logging.getLogger(__name__)
-mapper_registry = registry()
-default_columns = [
-    Column("active_flag", BOOLEAN, nullable=False, server_default='true'),
-    Column("created_by", UUID, nullable=False),
-    Column("created_at", DateTime, nullable=False),
-    Column("updated_by", UUID, nullable=False),
-    Column("updated_at", DateTime, nullable=False, server_default=func.now())
-] 
+_logging = Logging(__name__)
+_mapper_registry = registry()
 
 
 accounts = Table(
     "accounts",
-    mapper_registry.metadata,
+    _mapper_registry.metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("stable_id", UUID, nullable=False, unique=True, server_default=str(uuid4())),
     Column("username", VARCHAR(50), nullable=False, unique=True),
@@ -47,7 +40,7 @@ accounts = Table(
 
 passwords = Table(
     "passwords",
-    mapper_registry.metadata,
+    _mapper_registry.metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("username", ForeignKey("accounts.username")),
     Column("hash", BYTEA, nullable=False),
@@ -59,8 +52,8 @@ passwords = Table(
 
 
 def start_orm_mappers():
-    logger.info("Starting orm mappers...")
-    mapper_registry.map_imperatively(
+    _logging.logger.info("Starting orm mappers...")
+    _mapper_registry.map_imperatively(
         models.Account,
         accounts,
         properties={
@@ -71,7 +64,7 @@ def start_orm_mappers():
             )
         }
     )
-    mapper_registry.map_imperatively(
+    _mapper_registry.map_imperatively(
         models.Password,
         passwords,
         properties={
@@ -87,4 +80,4 @@ def start_orm_mappers():
             )
         }
     )
-    logger.info("Successfully mapped orm's.")
+    _logging.logger.info("Successfully mapped orm's.")

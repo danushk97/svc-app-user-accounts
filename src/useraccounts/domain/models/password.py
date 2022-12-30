@@ -5,12 +5,8 @@ This module holds the class which defines password entity.
 from datetime import datetime
 from uuid import uuid4
 import bcrypt
-import logging
 
 from useraccounts.domain.models.base_model import BaseModel
-
-
-logger = logging.getLogger(__name__)
 
 
 class Password(BaseModel):

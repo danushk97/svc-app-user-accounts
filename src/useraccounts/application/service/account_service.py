@@ -43,7 +43,6 @@ class AccountService:
             created_by=account_stable_id
         )
         with self.unit_of_work as uow:
-            import pdb; pdb.set_trace()
             AccountValidator.validate_for_create(
                 account, uow.accounts
             )

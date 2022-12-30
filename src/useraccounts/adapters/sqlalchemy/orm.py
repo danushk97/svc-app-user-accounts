@@ -1,6 +1,6 @@
+from logging import getLogger
 from uuid import uuid4
 
-from appscommon.logconfig import Logging
 from sqlalchemy import (
     Column,
     DateTime,
@@ -16,7 +16,7 @@ from sqlalchemy.orm import registry, relationship
 from useraccounts.domain import models
 
 
-_logging = Logging(__name__)
+_logger = getLogger(__name__)
 _mapper_registry = registry()
 
 
@@ -52,7 +52,7 @@ passwords = Table(
 
 
 def start_orm_mappers():
-    _logging.logger.info("Starting orm mappers...")
+    _logger.info("Starting orm mappers...")
     _mapper_registry.map_imperatively(
         models.Account,
         accounts,
@@ -80,4 +80,4 @@ def start_orm_mappers():
             )
         }
     )
-    _logging.logger.info("Successfully mapped orm's.")
+    _logger.info("Successfully mapped orm's.")

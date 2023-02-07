@@ -26,6 +26,8 @@ class Account(BaseModel):
             updated_by,
             updated_at
         )
+        self.id = None
+        self.stable_id = None
         self.name = name
         self.dob = dob
         self.username = username

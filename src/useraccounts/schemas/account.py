@@ -28,7 +28,7 @@ class CreateAccountRequestSchema(BaseModel):
         return hash_password(password)
 
 
-    def to_model(self):
+    def to_model(self) -> Account:
         account = Account(
             self.name,
             self.dob,

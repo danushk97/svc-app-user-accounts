@@ -3,9 +3,9 @@ This module holds the routes which is related add, update and delete user
 account detail.
 """
 
-from appscommon.http import send_success_response
 from appscommon.http.middleware import error_filter 
-from flask import Blueprint, request
+from flask import Blueprint, request, make_response
+from http import HTTPStatus
 
 from useraccounts.schemas.account import CreateAccountRequestSchema
 from useraccounts.application.service import AccountService 
@@ -24,8 +24,9 @@ services = bootstrap()
 def create_account():
     """Creates account.
     """
-    import pdb; pdb.set_trace()
     account_service: AccountService = services[Constants.ACCOUNT_SERVICE]()
-    result = account_service.create_account(request.context.body)
-
-    return send_success_response(result)
+    account_service.create_account(request.context.body)
+    response = make_response()
+    response.status_code = HTTPStatus.CREATED
+    
+    return response

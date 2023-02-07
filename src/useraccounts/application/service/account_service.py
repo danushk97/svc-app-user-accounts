@@ -33,14 +33,9 @@ class AccountService:
             (UserIdSchema): Contains the generated stable_id of the user.
         """
         account = create_account_schema.to_model()
-        account_id = None
         with self.unit_of_work as uow:
             AccountValidator.validate_for_create(
                 account, uow.accounts
             )
             uow.accounts.add(account)
-            uow.flush()
-            account_id = account.stable_id
             uow.commit()
-            
-        return AccountMetaSchema(account_id=str(account_id))

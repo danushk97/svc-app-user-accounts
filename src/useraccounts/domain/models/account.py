@@ -1,5 +1,4 @@
-from uuid import uuid4
-from datetime import datetime
+from datetime import date, datetime
 
 from useraccounts.domain.models.password import Password
 from useraccounts.domain.models.base_model import BaseModel
@@ -8,11 +7,13 @@ from useraccounts.domain.models.base_model import BaseModel
 class Account(BaseModel):
     def __init__(
         self,
-        email: str,
+        name: str,
+        dob: date,
         username: str,
-        attr: dict,
-        stable_id: str = None,
+        email: str,
+        phone_number: int,
         isemail_verified: bool = False,
+        isphone_number_verfied: bool = False,
         active_flag: bool = True,
         created_at: datetime = None,
         created_by: str = None,
@@ -25,11 +26,13 @@ class Account(BaseModel):
             updated_by,
             updated_at
         )
-        self.stable_id = stable_id or str(uuid4())
+        self.name = name
+        self.dob = dob
         self.username = username
         self.email = email
-        self.attr = attr
+        self.phone_number = phone_number
         self.isemail_verified = isemail_verified
+        self.isphone_number_verfied = isphone_number_verfied
         self.active_flag = active_flag
         self._password: Password = None
     

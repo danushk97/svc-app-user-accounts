@@ -13,7 +13,8 @@ from useraccounts.bootstrap import bootstrap
 logconfig.init()
 api_spec = FlaskPydanticSpec('usersaccounts', title='Accounts API')
 
-def main() -> Flask:
+
+def flask_app() -> Flask:
     """
     Creates flask app.
 
@@ -21,7 +22,7 @@ def main() -> Flask:
         app (Flask)
     """
     app = Flask(__name__)
-    bootstrap(app=app)
+    bootstrap(flask_app=app)
     api_spec.register(app)
 
     return app

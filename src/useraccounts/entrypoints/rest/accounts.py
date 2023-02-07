@@ -24,7 +24,8 @@ services = bootstrap()
 def create_account():
     """Creates account.
     """
+    import pdb; pdb.set_trace()
     account_service: AccountService = services[Constants.ACCOUNT_SERVICE]()
-    result = account_service.create_account(request.context.body.dict())
+    result = account_service.create_account(request.context.body)
 
     return send_success_response(result)

@@ -5,7 +5,7 @@ This moudule acts as the service layer which helps to create, delete and update 
 from useraccounts.application.validator.account_validator import AccountValidator
 from useraccounts.application.interfaces.unit_of_work import AbstractUnitOfWork
 from useraccounts.domain.models import Account, Password
-from useraccounts.schemas.account import AccountMetaSchema
+from useraccounts.schemas.account import AccountMetaSchema, CreateAccountRequestSchema
 from useraccounts.constants import Constants
 
 
@@ -22,7 +22,7 @@ class AccountService:
         """
         self.unit_of_work = unit_of_work
 
-    def create_account(self, create_account_schema: dict) -> AccountMetaSchema:
+    def create_account(self, create_account_schema: CreateAccountRequestSchema) -> AccountMetaSchema:
         """
         Creates user.
 
@@ -32,21 +32,15 @@ class AccountService:
         Returns:
             (UserIdSchema): Contains the generated stable_id of the user.
         """
-        account = Account(
-            create_account_schema[Constants.EMAIL],
-            create_account_schema[Constants.USERNAME],
-            create_account_schema[Constants.ATTR]
-        )
-        account_stable_id = account.stable_id
-        account.password = Password(
-            create_account_schema[Constants.PASSWORD],
-            created_by=account_stable_id
-        )
+        account = create_account_schema.to_model()
+        account_id = None
         with self.unit_of_work as uow:
             AccountValidator.validate_for_create(
                 account, uow.accounts
             )
             uow.accounts.add(account)
+            uow.flush()
+            account_id = account.stable_id
             uow.commit()
             
-        return AccountMetaSchema(account_id=account_stable_id)
+        return AccountMetaSchema(account_id=str(account_id))

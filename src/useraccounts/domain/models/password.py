@@ -33,7 +33,6 @@ class Password(BaseModel):
             updated_by,
             updated_at
         )
-        self.stable_id = str(uuid4())
         self.hash = password_hash
         self.created_by_user = None
         self.updated_by_user = None

@@ -4,9 +4,7 @@ This moudule acts as the service layer which helps to create, delete and update 
 
 from useraccounts.application.validator.account_validator import AccountValidator
 from useraccounts.application.interfaces.unit_of_work import AbstractUnitOfWork
-from useraccounts.domain.models import Account, Password
 from useraccounts.schemas.account import AccountMetaSchema, CreateAccountRequestSchema
-from useraccounts.constants import Constants
 
 
 class AccountService:

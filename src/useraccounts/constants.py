@@ -30,6 +30,7 @@ class Constants(ReadOnly):
     MESSAGE = "message"
     UNIT_OF_WORK = "unit_of_work"
     USERNAME = "username"
+    FLASK_ENV = "FLASK_ENV"
 
 
 class AppErrorMessage(ErrorMessage):

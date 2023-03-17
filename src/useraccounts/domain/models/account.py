@@ -1,7 +1,9 @@
 from datetime import date, datetime
 
+from appscommon.domain.models import BaseModel
+
 from useraccounts.domain.models.password import Password
-from useraccounts.domain.models.base_model import BaseModel
+from useraccounts.schemas.account import CreateAccountRequestSchema
 
 
 class Account(BaseModel):
@@ -14,7 +16,7 @@ class Account(BaseModel):
         phone_number: int,
         isemail_verified: bool = False,
         isphone_number_verfied: bool = False,
-        active_flag: bool = True,
+        is_active: bool = True,
         created_at: datetime = None,
         created_by: str = None,
         updated_by: str = None,
@@ -24,7 +26,8 @@ class Account(BaseModel):
             created_by,
             created_at,
             updated_by,
-            updated_at
+            updated_at,
+            is_active
         )
         self.id = None
         self.stable_id = None
@@ -35,14 +38,27 @@ class Account(BaseModel):
         self.phone_number = phone_number
         self.isemail_verified = isemail_verified
         self.isphone_number_verfied = isphone_number_verfied
-        self.active_flag = active_flag
         self._password: Password = None
-    
+
     @property
     def password(self):
         return self._password
-    
+
     @password.setter
-    def set_password(self, value: Password):
+    def password(self, value: Password):
         assert isinstance(value, Password), "value must be a instance of Password"
         self._password = value
+
+    @classmethod
+    def from_create_account_schema(cls, schema: CreateAccountRequestSchema):
+        account = cls(
+            schema.name,
+            schema.dob,
+            schema.username,
+            schema.email,
+            schema.phone_number
+        )
+        passowrd = Password(schema.password)
+        account.password = passowrd
+
+        return account

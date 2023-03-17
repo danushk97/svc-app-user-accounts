@@ -1,40 +1,28 @@
 import pytest
-from tests.helpers.fake_service.fake_auth_service import FakeAuthService, FakeAuthServiceRaisesException
-from user_accounts.application.auth_service import AuthService
-
-from tests.helpers.fake_service.fake_user_service import FakeUserService, FakeUserServiceRaisesException
-from tests.helpers.fake_service.fake_password_service import FakePasswordService, FakePasswordServiceRaisesException
-
-from user_accounts.manage import create_app
-from user_accounts.application.user_service import UserService
-from user_accounts.application.password_service import PasswordService
+from dataclasses import dataclass
+from os import environ
+from typing import Optional
 
 
-def test_di_config(binder):
-    binder.bind(UserService, FakeUserService)
-    binder.bind(PasswordService, FakePasswordService)
-    binder.bind(AuthService, FakeAuthService)
+environ['FLASK_ENV'] = 'test'
 
 
-def test_di_exception_config(binder):
-    binder.bind(PasswordService, FakePasswordServiceRaisesException)
-    binder.bind(UserService, FakeUserServiceRaisesException)
-    binder.bind(AuthService, FakeAuthServiceRaisesException)
+@dataclass
+class CreateAccountSchema:
+    name: str
+    dob: str
+    username: str
+    phone_number: int
+    email: str
+    password: Optional[str] = None
 
 
-@pytest.fixture
-def client():
-    with create_app(di_configurator=test_di_config).test_client() as http_client:
-        yield http_client
-
-
-@pytest.fixture
-def client_raises_exception():
-    with create_app(di_configurator=test_di_exception_config).test_client() as http_client:
-        yield http_client
-
-
-@pytest.fixture(autouse=True)
-def test_init(monkeypatch):
-    monkeypatch.setenv('MINIMUM_HASH_ITERATION', '4')
-    monkeypatch.setenv('MAXIMUM_HASH_ITERATION', '12')
+@pytest.fixture()
+def account_schema_instance():
+    return CreateAccountSchema(
+        name='fake_name',
+        dob='2001-01-12',
+        username='fake_uname',
+        email='uname@fakemail.com',
+        phone_number='1234567890'
+    )

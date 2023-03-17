@@ -3,12 +3,13 @@ This module holds the routes which is related add, update and delete user
 account detail.
 """
 
-from appscommon.http.middleware import error_filter 
+from appscommon.flaskutils.http.middleware import error_filter
 from flask import Blueprint, request, make_response
+from flask_pydantic_spec import Request
 from http import HTTPStatus
 
 from useraccounts.schemas.account import CreateAccountRequestSchema
-from useraccounts.application.service import AccountService 
+from useraccounts.application.service import AccountService
 from useraccounts.bootstrap import bootstrap
 from useraccounts.constants import Constants
 from useraccounts.app import api_spec
@@ -20,7 +21,7 @@ services = bootstrap()
 
 @accounts_app.post('create')
 @error_filter
-@api_spec.validate(body=CreateAccountRequestSchema)
+@api_spec.validate(body=Request(CreateAccountRequestSchema))
 def create_account():
     """Creates account.
     """
@@ -28,5 +29,5 @@ def create_account():
     account_service.create_account(request.context.body)
     response = make_response()
     response.status_code = HTTPStatus.CREATED
-    
+
     return response

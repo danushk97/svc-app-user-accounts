@@ -1,13 +1,14 @@
 from tests.helpers.fake_infrastructure.fake_repository import FakeUserRepository, \
     FakeUserRepositoryReturnsEmptyList, FakeUserRepositoryRasisesRepoException,\
     FakePasswordRepository, FakePasswordRepositoryReturnsZero, \
-    FakePasswordRepositoryRasisesRepoException
+    FakePasswordRepositoryRasisesRepoException, FakeAccountRepository
 from tests.helpers.fake_infrastructure.fake_sqlalchmey_session import FakeSQLAlchemySession
 
 
 class FakeUnitOfWork:
     def __init__(self, session=FakeSQLAlchemySession, db_url=None):
-        self.session = session(db_url)
+        self._session = session(db_url)
+        self.accounts = FakeAccountRepository(self._session)
 
     def __enter__(self):
         return self
@@ -29,12 +30,6 @@ class FakeUnitOfWork:
         Pass
         """
         pass
-
-    def user_repository(self):
-        return FakeUserRepository(self.session)
-
-    def password_repository(self):
-        return FakePasswordRepository(self.session)
 
 
 class FakeEmptyUnitOfWork(FakeUnitOfWork):

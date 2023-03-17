@@ -5,6 +5,7 @@ psycopg2-binary==2.8.6
 pydantic[email]==1.10.3
 pyjwt==2.6.0
 SQLAlchemy==1.4.5
+python-dotenv
 
 pytest
 pytest-cov

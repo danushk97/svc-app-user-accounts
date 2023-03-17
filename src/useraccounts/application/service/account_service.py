@@ -2,9 +2,11 @@
 This moudule acts as the service layer which helps to create, delete and update user account detail.
 """
 
+from appscommon.db.interfaces.unit_of_work import AbstractUnitOfWork
+
 from useraccounts.application.validator.account_validator import AccountValidator
-from useraccounts.application.interfaces.unit_of_work import AbstractUnitOfWork
-from useraccounts.schemas.account import AccountMetaSchema, CreateAccountRequestSchema
+from useraccounts.domain.models import Account
+from useraccounts.schemas.account import CreateAccountRequestSchema
 
 
 class AccountService:
@@ -20,17 +22,14 @@ class AccountService:
         """
         self.unit_of_work = unit_of_work
 
-    def create_account(self, create_account_schema: CreateAccountRequestSchema) -> AccountMetaSchema:
+    def create_account(self, create_account_schema: CreateAccountRequestSchema) -> None:
         """
-        Creates user.
+        Creates user account.
 
         Args:
-            user_info (dict): Basic user information.
-
-        Returns:
-            (UserIdSchema): Contains the generated stable_id of the user.
+            create_account_schema (CreateAccountRequestSchema): Basic user information.
         """
-        account = create_account_schema.to_model()
+        account = Account.from_create_account_schema(create_account_schema)
         with self.unit_of_work as uow:
             AccountValidator.validate_for_create(
                 account, uow.accounts

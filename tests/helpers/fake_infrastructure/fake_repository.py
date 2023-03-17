@@ -2,24 +2,36 @@ import os
 import bcrypt
 from random import randint
 
-from user_accounts.domain.value_object.password import Password
-
-from user_accounts.infrastructure.sqlalchemy.models import password
-
-from user_accounts.domain.entity.user import User
 from tests.helpers.fake_error_code.fake_error_code import FakeErrorCode
+from tests.helpers.fake_infrastructure.fake_sqlalchmey_session import FakeSQLAlchemySession
 
-from user_accounts.common.exception import RepositoryException
 
 
 class FakeSQLAlchemyRepository:
-    def __init__(self, session):
+    def __init__(self, session=FakeSQLAlchemySession()):
         self.session = session
 
     def add(self, entity):
         entity.stable_id = 1
 
         return entity
+
+
+class FakeAccountRepository(FakeSQLAlchemyRepository):
+    def add(self, account):
+        return None
+
+    def get_by_email(self, mail):
+        if 'existing' in mail:
+            return mail
+
+        return None
+
+    def get_by_username(self, username):
+        if 'existing' in username:
+            return username
+
+        return None
 
 
 class FakeUserRepositoryReturnsEmptyList(FakeSQLAlchemyRepository):

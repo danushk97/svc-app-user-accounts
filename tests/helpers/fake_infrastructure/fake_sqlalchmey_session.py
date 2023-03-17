@@ -1,9 +1,8 @@
 from sqlalchemy.exc import SQLAlchemyError
 
 
-class FakeUser:
+class FakeAccount:
     stable_id = 'user_id'
-    attr = {}
 
 
 class FakeSQLAlchemySession:
@@ -37,6 +36,9 @@ class FakeSQLAlchemySession:
     def query(self, *args, **kwargs):
         return self
 
+    def where(self, *args, **kwargs):
+        return self
+
     def filter(self, *args, **kwargs):
         return self
 
@@ -44,7 +46,7 @@ class FakeSQLAlchemySession:
         return ['data']
 
     def one_or_none(self):
-        return FakeUser, b'password_hash'
+        return FakeAccount
 
     def limit(self, limit):
         return self
@@ -58,7 +60,7 @@ class FakeSQLAlchemySession:
     def flush(self):
         return None
 
-    def remove(self):
+    def close(self):
         return None
 
 

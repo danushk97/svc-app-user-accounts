@@ -2,7 +2,7 @@
 This module holds the UserValidator class.
 """
 
-from useraccounts.application.error_code_generator.invalid_accont_error_code_generator import \
+from useraccounts.application.errorcodegenerator.invalid_accont_error_code_generator import \
     InvalidAccountErrorCodeGenerator
 from useraccounts.application.interfaces.accounts_repository import AbstractAccountsRepository
 from useraccounts.application.validator.exception import DuplicateEntryException
@@ -15,9 +15,9 @@ class AccountValidator:
     Validates the user data.
     """
     @staticmethod
-    def validate_for_create( 
-        account: Account, 
-        accounts_repo: AbstractAccountsRepository, 
+    def validate_for_create(
+        account: Account,
+        accounts_repo: AbstractAccountsRepository,
         fields: list = [Constants.EMAIL, Constants.USERNAME]
     ):
         """

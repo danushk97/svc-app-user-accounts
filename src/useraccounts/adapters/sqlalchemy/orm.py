@@ -31,11 +31,11 @@ accounts = Table(
     Column("email", VARCHAR(128), nullable=False, unique=True),
     Column("isemail_verified", BOOLEAN, nullable=False, server_default='false'),
     Column("isphone_number_verified", BOOLEAN, nullable=False, server_default='false'),
-    Column("active_flag", BOOLEAN, nullable=False, server_default='true'),
+    Column("is_active", BOOLEAN, nullable=False, server_default='true'),
     Column("created_by", UUID),
     Column("created_at", DateTime, nullable=False, server_default=func.now()),
-    Column("last_updated_by", UUID, nullable=False),
-    Column("last_updated_at", DateTime, server_default=func.now())
+    Column("last_updated_by", UUID),
+    Column("last_updated_at", DateTime)
 )
 
 
@@ -45,7 +45,7 @@ passwords = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("username", ForeignKey("accounts.username")),
     Column("hash", BYTEA, nullable=False),
-    Column("active_flag", BOOLEAN, nullable=False, server_default='true'),
+    Column("is_active", BOOLEAN, nullable=False, server_default='true'),
     Column("created_by", ForeignKey("accounts.id")),
     Column("created_at", DateTime, nullable=False, server_default=func.now()),
     Column("last_updated_by", ForeignKey("accounts.id"), ),
@@ -53,15 +53,15 @@ passwords = Table(
 )
 
 
-def start_orm_mappers():
+def start_orm_mappers(is_create_tables=False, engine=None):
     _logger.info("Starting orm mappers...")
     _mapper_registry.map_imperatively(
         models.Account,
         accounts,
         properties={
             "password": relationship(
-                models.Password, 
-                foreign_keys=[passwords.c.username], 
+                models.Password,
+                foreign_keys=[passwords.c.username],
                 uselist=False,
                 back_populates="user"
             )
@@ -72,15 +72,15 @@ def start_orm_mappers():
         passwords,
         properties={
             "created_by_user": relationship(
-                models.Account, 
+                models.Account,
                 foreign_keys=[passwords.c.created_by]
             ),
             "updated_by_user": relationship(
-                models.Account, 
+                models.Account,
                 foreign_keys=[passwords.c.last_updated_by]
             ),
             "user": relationship(
-                models.Account, 
+                models.Account,
                 foreign_keys=[passwords.c.username],
                 back_populates="password",
                 viewonly=True
@@ -88,3 +88,6 @@ def start_orm_mappers():
         }
     )
     _logger.info("Successfully mapped orm's.")
+
+    if is_create_tables:
+        _mapper_registry.metadata.create_all(engine)

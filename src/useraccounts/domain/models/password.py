@@ -3,10 +3,9 @@ This module holds the class which defines password entity.
 """
 
 from datetime import datetime
-from uuid import uuid4
 import bcrypt
 
-from useraccounts.domain.models.base_model import BaseModel
+from appscommon.domain.models import BaseModel
 
 
 class Password(BaseModel):
@@ -22,7 +21,8 @@ class Password(BaseModel):
         created_at: datetime = None,
         created_by: str = None,
         updated_by: str = None,
-        updated_at: datetime = None
+        updated_at: datetime = None,
+        is_active: bool = True
     ):
         """
         Instantiates class.
@@ -31,7 +31,8 @@ class Password(BaseModel):
             created_by,
             created_at,
             updated_by,
-            updated_at
+            updated_at,
+            is_active
         )
         self.hash = password_hash
         self.created_by_user = None

@@ -3,18 +3,16 @@ This module holds the unit of work class for sqlalchemy.
 """
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session, Session
+from sqlalchemy.orm import sessionmaker, scoped_session
 
-from useraccounts.config import Config
+from appscommon.db.adapters.unit_of_work import UnitOfWork
+
+from useraccounts.config import config
+from useraccounts.constants import Constants
 from useraccounts.adapters.sqlalchemy.repository import AccountsRepository
-from useraccounts.application.interfaces.unit_of_work import AbstractUnitOfWork
 
 
-engine = create_engine(Config.DB_CONNECTION_STRING)
-session = scoped_session(sessionmaker(bind=engine))
-
-
-class SQLAlchemyUnitOfWork(AbstractUnitOfWork):
+class SQLAlchemyUnitOfWork(UnitOfWork):
     """
     Handles and keeps track of all the transaction made with the database and
     also handles the database session.
@@ -22,59 +20,20 @@ class SQLAlchemyUnitOfWork(AbstractUnitOfWork):
     Attributes:
         session_factory (Session): SQLAlchemy session.
     """
-    def __init__(self, session_factory=session):
+    def __init__(self, session_factory: scoped_session = None):
         """
         Instantiates the class.
         """
-        self._session_factory = session_factory
-        self._accounts = None
+        super().__init__(
+            session_factory or self._get_session_maker(),
+        )
 
     def __enter__(self):
-        """
-        Gets executed when this instance of class is used with "with" statement.
-        """
-        self._session: Session = self._session_factory()
+        super().__enter__()  #  initializes session in self._session
+        self.accounts = AccountsRepository(self._session)
 
         return self
 
-    def __exit__(self, *args) -> None:
-        """
-        Gets executed after the code within the "with" statement gets executed.
-        """
-        self.rollback()
-        self.end_session()
-
-    def commit(self) -> None:
-        """
-        Saves all the changes whcih was made during the current database
-        session.
-        """
-        self._session.commit()
-
-    def flush(self) -> None:
-        """
-        Saves all the changes whcih was made during the current database
-        session.
-        """
-        self._session.flush()
-
-    def rollback(self) -> None:
-        """
-        Discards all the changes whcih was made after the latest commit.
-        """
-        self._session.rollback()
-
-    def end_session(self) -> None:
-        """
-        Closes the current DB session.
-        """
-        self._session_factory.remove()
-        self._session = None
-        self._accounts = None
-
-    @property
-    def accounts(self) -> AccountsRepository:
-        if not self._accounts:
-            self._accounts = AccountsRepository(self._session)
-        
-        return self._accounts
+    def _get_session_maker(self) -> scoped_session:
+        engine = create_engine(config[Constants.DB_CONNECTION_STRING])
+        return scoped_session(sessionmaker(bind=engine))

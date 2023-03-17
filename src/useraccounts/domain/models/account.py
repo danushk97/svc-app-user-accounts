@@ -58,7 +58,6 @@ class Account(BaseModel):
             schema.email,
             schema.phone_number
         )
-        passowrd = Password(schema.password)
-        account.password = passowrd
+        account._password = Password(schema.password)
 
         return account

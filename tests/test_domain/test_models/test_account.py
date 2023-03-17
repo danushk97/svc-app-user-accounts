@@ -1,6 +1,6 @@
 import pytest
-
 from sqlalchemy.orm import clear_mappers
+
 from useraccounts.domain.models import Account, Password
 
 

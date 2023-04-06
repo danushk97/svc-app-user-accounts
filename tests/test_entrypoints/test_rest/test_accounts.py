@@ -17,14 +17,7 @@ def test_create_user_given_invalid_passoword_returns_400(test_client, account_sc
     response = test_client.post(CREATE_ACCOUNT, json=request_payload)
     assert response.status_code == 400
     assert response.json['title'] == 'Validation error'
-    assert response.json['invalid_params'] == [
-        {
-            'ctx': {'limit_value': 4},
-            'field': ['password'],
-            'msg': 'ensure this value has at least 4 characters',
-            'type': 'value_error.any_str.min_length'
-        }
-    ]
+    assert response.json['invalid_params'] == [{'field': ['password'], 'msg': 'ensure this value has at least 4 characters'}]
 
 # def test_create_user_on_exception_from_service_layer_then_returns_data_with_status_code_500(client_raises_exception):
 #     response = client_raises_exception.post(CREATE_ACCOUNT, json={
@@ -58,7 +51,7 @@ def test_create_user_given_invalid_passoword_returns_400(test_client, account_sc
 #     }
 
 
-def test_create_account_given_missig_fields_returns_400(test_client):
+def test_create_account_given_missing_fields_returns_400(test_client):
     response = test_client.post(CREATE_ACCOUNT, json={
             'email': 'email@gmail.com',
             'display_name': 'name',
@@ -70,8 +63,7 @@ def test_create_account_given_missig_fields_returns_400(test_client):
             "field": [
                 key
             ],
-            "msg": "field required",
-            "type": "value_error.missing"
+            "msg": "field required"
         }
         for key in ["name", "dob", "username", "password"]
     ]

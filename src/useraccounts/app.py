@@ -4,7 +4,6 @@ This module holds the function which retruns the instance of app.
 
 from flask  import Flask
 from flask_pydantic_spec import FlaskPydanticSpec
-from http import HTTPStatus
 
 from appscommon import logconfig
 from appscommon.flaskutils.confighelper import register_blueprints, register_http_error_handlers

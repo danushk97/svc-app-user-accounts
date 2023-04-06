@@ -1,6 +1,5 @@
 import bcrypt
 from random import randint
-from os import environ
 
 from useraccounts.config import config
 from useraccounts.constants import Constants

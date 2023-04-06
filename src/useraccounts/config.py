@@ -1,4 +1,6 @@
-"""This module holds all the configurations."""
+"""
+This module holds all the configurations.
+"""
 
 from dotenv import load_dotenv
 from os import environ

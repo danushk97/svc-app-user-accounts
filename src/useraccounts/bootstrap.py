@@ -1,4 +1,7 @@
-from flask import Flask
+"""
+This modules holds the bootstrap function.
+"""
+
 from logging import getLogger
 
 from appscommon.flaskutils import confighelper
@@ -34,7 +37,7 @@ def bootstrap(
 
     if isstart_orm_mappers:
         start_orm_mappers()
-        
+
     _logger.info('Bootstrapping was successful.')
 
     return _services

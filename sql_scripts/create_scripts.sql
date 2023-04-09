@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS 'uuid-ossp';
+
 CREATE TABLE IF NOT EXISTS public.accounts (
     id SERIAL NOT NULL PRIMARY KEY,
     stable_id uuid NOT NULL UNIQUE DEFAULT uuid_generate_v1(),
@@ -11,7 +13,7 @@ CREATE TABLE IF NOT EXISTS public.accounts (
     isphone_number_verified boolean DEFAULT false,
     created_at timestamp without time zone NOT NULL DEFAULT timezone('utc'::text, now()),
     created_by integer,
-    last_updated_at timestamp without time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+    last_updated_at timestamp without time zone DEFAULT timezone('utc'::text, now()),
     last_updated_by integer
 );
 
@@ -22,7 +24,7 @@ CREATE TABLE IF NOT EXISTS public.passwords (
     is_active boolean DEFAULT true,
     created_at timestamp without time zone NOT NULL DEFAULT timezone('utc'::text, now()),
     created_by integer,
-    last_updated_at timestamp without time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+    last_updated_at timestamp without time zone DEFAULT timezone('utc'::text, now()),
     last_updated_by integer,
     FOREIGN KEY (username) REFERENCES public.accounts (username) ON DELETE CASCADE,
     FOREIGN KEY (created_by) REFERENCES public.accounts (id) ON DELETE CASCADE,

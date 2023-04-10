@@ -30,3 +30,10 @@ CREATE TABLE IF NOT EXISTS public.passwords (
     FOREIGN KEY (created_by) REFERENCES public.accounts (id) ON DELETE CASCADE,
     FOREIGN KEY (last_updated_by) REFERENCES public.accounts (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS public.roles (
+    id SERIAL NOT NULL PRIMARY KEY,
+    stable_id uuid NOT NULL UNIQUE DEFAULT uuid_generate_v1(),
+    role_name varchar(50) NOT NULL UNIQUE,
+    is_active boolean DEFAULT true
+);

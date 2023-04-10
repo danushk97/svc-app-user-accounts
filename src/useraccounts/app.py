@@ -13,6 +13,7 @@ from useraccounts.entrypoints.rest import ROUTE_MODULES
 
 
 logconfig.init_logging()
+#  /apidoc/swagger
 api_spec = FlaskPydanticSpec(
     'usersaccounts',
     title='Accounts API'

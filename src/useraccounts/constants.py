@@ -7,7 +7,7 @@ from enum import StrEnum
 
 class Constants(StrEnum):
     #string literals
-    ACCOUNT_SERVICE = "account_service"
+    ACCOUNTS_SERVICE = "accounts_service"
     PAYLOAD = "payload"
     EMAIL = "email"
     HASH = "hash"

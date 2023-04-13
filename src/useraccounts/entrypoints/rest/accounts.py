@@ -30,8 +30,8 @@ services = bootstrap()
 def create_account():
     """Creates account.
     """
-    account_service: AccountService = services[Constants.ACCOUNT_SERVICE]()
-    account_service.create_account(request.context.body)
+    accounts_service: AccountService = services[Constants.ACCOUNTS_SERVICE]()
+    accounts_service.create_account(request.context.body)
     response = make_response()
     response.status_code = HTTPStatus.CREATED
 

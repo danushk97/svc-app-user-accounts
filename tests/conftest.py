@@ -24,5 +24,5 @@ def account_schema_instance():
         dob='2001-01-12',
         username='fake_uname',
         email='uname@fakemail.com',
-        phone_number='1234567890'
+        phone_number=1234567890
     )

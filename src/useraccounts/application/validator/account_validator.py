@@ -18,7 +18,7 @@ class AccountValidator:
     def validate_for_create(
         account: Account,
         accounts_repo: AbstractAccountsRepository,
-        fields: list = [Constants.EMAIL, Constants.USERNAME]
+        fields: list = [Constants.EMAIL, Constants.USERNAME, Constants.PHONE_NUMBER]
     ):
         """
         Validates whether the user is unique.

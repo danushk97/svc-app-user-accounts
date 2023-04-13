@@ -9,6 +9,9 @@ class AccountRepository(AbstractAccountsRepository):
 
     def get_by_username(self, username: str):
         return super().get_by_username(username)
+    
+    def get_by_phone_number(self, phone_number: int):
+        return super().get_by_phone_number(phone_number)
 
     def list(self):
         return super().list()
@@ -24,3 +27,6 @@ def test_abstract_account_repository():
 
     with pytest.raises(NotImplementedError):
         account_repo.get_by_username('fake_uname')
+
+    with pytest.raises(NotImplementedError):
+        account_repo.get_by_phone_number(1234567890)

@@ -32,3 +32,11 @@ class AccountsRepository(AbstractAccountsRepository):
             Account.email == email,
             Account.is_active == True
         ).one_or_none()
+
+    @sql_error_handler
+    def get_by_phone_number(self, phone_number: int):
+        return self._select_account().where(
+            Account.phone_number == phone_number,
+            Account.is_active == True
+        ).one_or_none()
+    

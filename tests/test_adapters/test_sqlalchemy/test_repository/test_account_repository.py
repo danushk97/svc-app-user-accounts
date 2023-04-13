@@ -43,6 +43,21 @@ def test_get_by_username_given_valid_email_then_returns_data_if_exists(accounts_
         assert account_row is None
 
 
+@pytest.mark.parametrize(
+    "input_phone_number, expected_instance", [
+        (1234567890, Account),
+        (1234567891, None)
+    ]
+)
+def test_get_by_phone_number_given_valid_number_then_returns_data_if_exists(accounts_repo, input_phone_number, expected_instance):
+    account_row = accounts_repo.get_by_phone_number(input_phone_number)
+    if expected_instance:
+        assert isinstance(account_row, expected_instance)
+        assert account_row.phone_number == input_phone_number
+    else:
+        assert account_row is None
+
+
 def test_get_by_username_given_invalid_input_raises_app_exception(accounts_repo):
     with pytest.raises(AppException) as exc:
         accounts_repo.get_by_email(1)

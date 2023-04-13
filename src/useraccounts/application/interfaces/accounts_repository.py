@@ -11,3 +11,8 @@ class AbstractAccountsRepository(AbstractRepository):
     @abstractmethod
     def get_by_email(self, email: str):
         raise NotImplementedError
+
+    @abstractmethod
+    def get_by_phone_number(self, phone_number: int):
+        raise NotImplementedError
+    

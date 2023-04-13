@@ -25,7 +25,8 @@ class InvalidAccountErrorCodeGenerator:
         duplicate_field = str(duplicate_field).lower()
         error_messages = {
             Constants.EMAIL: AppErrorMessage.ACCOUNT_WITH_EMAIL_ID_ALREADY_EXISTS,
-            Constants.USERNAME: AppErrorMessage.ACCOUNT_WITH_USERNAME_ALREADY_EXISTS
+            Constants.USERNAME: AppErrorMessage.ACCOUNT_WITH_USERNAME_ALREADY_EXISTS,
+            Constants.PHONE_NUMBER: AppErrorMessage.ACCOUNT_WITH_PHONE_NUMBER_ALREADY_EXISTS
         }
 
         return dict(

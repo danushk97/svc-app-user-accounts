@@ -33,6 +33,12 @@ class FakeAccountRepository(FakeSQLAlchemyRepository):
 
         return None
 
+    def get_by_phone_number(self, phone_number):
+        if phone_number != 1234567890:
+            return phone_number
+
+        return None
+
 
 class FakeUserRepositoryReturnsEmptyList(FakeSQLAlchemyRepository):
     def get_user_by_attr_field(self, field, value):

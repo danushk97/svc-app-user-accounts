@@ -2,11 +2,10 @@
 This module holds the constants.
 """
 
-from appscommon.exception.message import ErrorMessage
-from appscommon.readonly import ReadOnly
+from enum import StrEnum
 
 
-class Constants(ReadOnly):
+class Constants(StrEnum):
     #string literals
     ACCOUNT_SERVICE = "account_service"
     PAYLOAD = "payload"
@@ -33,7 +32,7 @@ class Constants(ReadOnly):
     FLASK_ENV = "FLASK_ENV"
 
 
-class AppErrorMessage(ErrorMessage):
+class AppErrorMessage(StrEnum):
     INVALID_DISPLAY_NAME = "Please provide a valid display_name"
     INVALID_EMAIL = "Please provide a valid email."
     INVALID_PASSWORD = "Please provide a valid password"
@@ -42,6 +41,7 @@ class AppErrorMessage(ErrorMessage):
     ATTR_REQUIRED = "attr is required"
     ACCOUNT_WITH_EMAIL_ID_ALREADY_EXISTS = "Account with this email id already exists."
     ACCOUNT_WITH_USERNAME_ALREADY_EXISTS = "Account with this username already exists."
+    ACCOUNT_WITH_PHONE_NUMBER_ALREADY_EXISTS = "Account with this phone_number already exists."
     NO_USER_FOUND = "User not registered"
     EMAIL_REQUIRED = "email is required."
     USER_ID_REQUIRED = "user_id is required"

@@ -17,9 +17,8 @@ class CreateAccountRequestSchema(BaseModel):
     password: str = Field(min_length=4)
 
     @validator("phone_number")
-    def phone_number_validator(cls, phone_number: str):
+    def phone_number_validator(cls, phone_number: int):
         assert len(str(phone_number)) == 10, 'The phone_number must contain 10 digits'
-
         return phone_number
 
     @validator("password")

@@ -4,7 +4,6 @@ This module holds the unit of work class for sqlalchemy.
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-
 from appscommon.db.adapters.unit_of_work import UnitOfWork
 
 from useraccounts.config import config
@@ -20,6 +19,8 @@ class SQLAlchemyUnitOfWork(UnitOfWork):
     Attributes:
         session_factory (Session): SQLAlchemy session.
     """
+    _engine = create_engine(config[Constants.DB_CONNECTION_STRING])
+    
     def __init__(self, session_factory: scoped_session = None):
         """
         Instantiates the class.
@@ -35,5 +36,4 @@ class SQLAlchemyUnitOfWork(UnitOfWork):
         return self
 
     def _get_session_maker(self) -> scoped_session:
-        engine = create_engine(config[Constants.DB_CONNECTION_STRING])
-        return scoped_session(sessionmaker(bind=engine))
+        return scoped_session(sessionmaker(bind=self._engine))
